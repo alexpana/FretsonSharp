@@ -13,6 +13,7 @@ public class ConnectionManager : MonoBehaviour
     private bool _isDraggingConnection = false;
 
     private List<SlotConnection> _connections = new();
+    private Dictionary<SlotConnection, UILine> _connectionToBezier = new();
 
     private NodeSlot _sourceSlot;
     private GameObject _bezierPrefab;
@@ -48,7 +49,8 @@ public class ConnectionManager : MonoBehaviour
 
         if (_isDraggingConnection)
         {
-            UpdateBezier(_linkShadow, _sourceSlot.transform.position, Input.mousePosition);
+            Vector3 destination = _hoveredSlot != null ? _hoveredSlot.transform.position : Input.mousePosition;
+            UpdateBezier(_linkShadow, _sourceSlot.transform.position, destination);
         }
     }
 
@@ -71,25 +73,64 @@ public class ConnectionManager : MonoBehaviour
         return false;
     }
 
-    private void CreateConnection(NodeSlot slotA, NodeSlot slotB)
+    private void CreateConnection(NodeSlot source, NodeSlot destination)
     {
-        // TODO: handle multiple outputs to the same input
-        Debug.Log($"Creating connection between {slotA}, {slotB}");
-        _connections.Add(new SlotConnection(slotA, slotB));
-        CreateBezier(slotA, slotB);
+        if (source.DataDirection == NodeSlot.Direction.In)
+        {
+            CreateConnection(destination, source);
+            return;
+        }
+
+        SlotConnection existing = null;
+        foreach (var connection in _connections)
+        {
+            if (connection.Destination == destination)
+            {
+                existing = connection;
+                break;
+            }
+        }
+
+        if (existing != null)
+        {
+            DeleteConnection(existing);
+        }
+
+        var newConnection = new SlotConnection(source, destination);
+        _connections.Add(newConnection);
+        CreateBezier(newConnection);
     }
 
-    private void CreateBezier(NodeSlot slotA, NodeSlot slotB)
+    private void DeleteConnection(SlotConnection existing)
+    {
+        Debug.Log($"Deleting connection {existing.Source} - {existing.Destination}");
+        _connections.Remove(existing);
+        Destroy(_connectionToBezier[existing].gameObject);
+        _connectionToBezier.Remove(existing);
+    }
+
+    private void CreateBezier(SlotConnection connection)
     {
         var bezier = Instantiate(_bezierPrefab, GameObject.Find("SlotConnections").transform).GetComponent<UILine>();
-        UpdateBezier(bezier, slotB.transform.position, slotA.transform.position);
+        UpdateBezier(bezier, connection.Source, connection.Destination);
+        _connectionToBezier[connection] = bezier;
+    }
 
+    private void UpdateBezier(UILine bezier, NodeSlot a, NodeSlot b)
+    {
+        var handleScale = Mathf.Min(200, (a.Position - b.Position).magnitude / 2.0f);
+        bezier.line.EditPoint(0, a.Position, SlotOrientationToBezierHandle(a.SlotOrientation) * handleScale,
+            Vector3.zero, 2);
+
+        bezier.line.EditPoint(1, b.Position, Vector3.zero,
+            SlotOrientationToBezierHandle(b.SlotOrientation) * handleScale, 2);
+        bezier.GeometyUpdateFlagUp();
     }
 
     private void UpdateBezier(UILine bezier, Vector3 from, Vector3 to)
     {
-        float handleScale = Mathf.Min(200, (from - to).magnitude / 2.0f);
-        bezier.line.EditPoint(0, _sourceSlot.transform.position,
+        var handleScale = Mathf.Min(200, (from - to).magnitude / 2.0f);
+        bezier.line.EditPoint(0, from,
             SlotOrientationToBezierHandle(_sourceSlot.SlotOrientation) * handleScale, Vector3.zero, 2);
 
         var destinationOrientation = -SlotOrientationToBezierHandle(_sourceSlot.SlotOrientation);
@@ -98,7 +139,7 @@ public class ConnectionManager : MonoBehaviour
             destinationOrientation = SlotOrientationToBezierHandle(_hoveredSlot.SlotOrientation);
         }
 
-        bezier.line.EditPoint(1, Input.mousePosition,
+        bezier.line.EditPoint(1, to,
             Vector3.zero, destinationOrientation * handleScale, 2);
         bezier.GeometyUpdateFlagUp();
     }
@@ -112,9 +153,9 @@ public class ConnectionManager : MonoBehaviour
     {
         return orientation switch
         {
-            NodeSlot.Orientation.Down => new Vector3(-1, 0, 0),
             NodeSlot.Orientation.Left => new Vector3(-1, 0, 0),
-            NodeSlot.Orientation.Right => new Vector3(0, 1, 0),
+            NodeSlot.Orientation.Right => new Vector3(1, 0, 0),
+            NodeSlot.Orientation.Down => new Vector3(0, 1, 0),
             NodeSlot.Orientation.Up => new Vector3(0, -1, 0),
             _ => Vector3.zero
         };

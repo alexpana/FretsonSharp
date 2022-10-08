@@ -18,6 +18,8 @@ public class NodeSlot : MonoBehaviour
         Right
     }
 
+    public Vector3 Position => transform.position;
+
     public DataType Type;
 
     public Image NodeAnchor;
