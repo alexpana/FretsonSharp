@@ -12,7 +12,7 @@ public class ConnectionManager : MonoBehaviour
     private UILine _linkShadow;
     private bool _isDraggingConnection = false;
 
-    private List<SlotConnection> _connections = new List<SlotConnection>();
+    private List<SlotConnection> _connections = new();
 
     private NodeSlot _sourceSlot;
     private GameObject _bezierPrefab;
