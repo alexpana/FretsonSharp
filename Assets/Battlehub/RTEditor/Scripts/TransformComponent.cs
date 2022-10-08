@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Battlehub.RTEditor
 {
@@ -20,17 +20,14 @@ namespace Battlehub.RTEditor
         public InputField ScaleZ;
         public Button Reset;
 
+        private bool m_handleTransformChange = true;
+        private readonly HashSet<GameObject> m_selectedGameObjects = new();
+
         private Transform[] m_transforms;
-        private HashSet<GameObject> m_selectedGameObjects = new HashSet<GameObject>();
 
         private void Awake()
         {
             RuntimeSelection.SelectionChanged += OnRuntimeSelectionChanged;
-        }
-
-        private void OnDestroy()
-        {
-            RuntimeSelection.SelectionChanged -= OnRuntimeSelectionChanged;
         }
 
         private void OnEnable()
@@ -92,108 +89,55 @@ namespace Battlehub.RTEditor
             EnableDisableToggle.onValueChanged.RemoveListener(OnEnableDisableValueChanged);
         }
 
-        private bool m_handleTransformChange = true;
+        private void OnDestroy()
+        {
+            RuntimeSelection.SelectionChanged -= OnRuntimeSelectionChanged;
+        }
+
         private void HandlePositionChanged()
         {
-            if(!m_handleTransformChange)
-            {
-                return;
-            }
+            if (!m_handleTransformChange) return;
 
-            if (m_transforms == null || m_transforms.Length == 0)
-            {
-                return;
-            }
+            if (m_transforms == null || m_transforms.Length == 0) return;
             float xVal;
-            if (!float.TryParse(PositionX.text, out xVal))
-            {
-                return;
-            }
+            if (!float.TryParse(PositionX.text, out xVal)) return;
             float yVal;
-            if (!float.TryParse(PositionY.text, out yVal))
-            {
-                return;
-            }
+            if (!float.TryParse(PositionY.text, out yVal)) return;
             float zVal;
-            if (!float.TryParse(PositionZ.text, out zVal))
-            {
-                return;
-            }
-            for (int i = 0; i < m_transforms.Length; ++i)
-            {
-                m_transforms[i].position = new Vector3(xVal, yVal, zVal);
-            }
+            if (!float.TryParse(PositionZ.text, out zVal)) return;
+            for (var i = 0; i < m_transforms.Length; ++i) m_transforms[i].position = new Vector3(xVal, yVal, zVal);
         }
 
         private void HandleRotationChanged()
         {
-            if (!m_handleTransformChange)
-            {
-                return;
-            }
-            if (m_transforms == null || m_transforms.Length == 0)
-            {
-                return;
-            }
+            if (!m_handleTransformChange) return;
+            if (m_transforms == null || m_transforms.Length == 0) return;
             float xVal;
-            if (!float.TryParse(RotationX.text, out xVal))
-            {
-                return;
-            }
+            if (!float.TryParse(RotationX.text, out xVal)) return;
             float yVal;
-            if (!float.TryParse(RotationY.text, out yVal))
-            {
-                return;
-            }
+            if (!float.TryParse(RotationY.text, out yVal)) return;
             float zVal;
-            if (!float.TryParse(RotationZ.text, out zVal))
-            {
-                return;
-            }
-            for (int i = 0; i < m_transforms.Length; ++i)
-            {
-                m_transforms[i].rotation = Quaternion.Euler(xVal, yVal, zVal);
-            }
+            if (!float.TryParse(RotationZ.text, out zVal)) return;
+            for (var i = 0; i < m_transforms.Length; ++i) m_transforms[i].rotation = Quaternion.Euler(xVal, yVal, zVal);
         }
 
         private void HandleScaleChanged()
         {
-            if (!m_handleTransformChange)
-            {
-                return;
-            }
-            if (m_transforms == null || m_transforms.Length == 0)
-            {
-                return;
-            }
+            if (!m_handleTransformChange) return;
+            if (m_transforms == null || m_transforms.Length == 0) return;
             float xVal;
-            if (!float.TryParse(ScaleX.text, out xVal))
-            {
-                return;
-            }
+            if (!float.TryParse(ScaleX.text, out xVal)) return;
             float yVal;
-            if (!float.TryParse(ScaleY.text, out yVal))
-            {
-                return;
-            }
+            if (!float.TryParse(ScaleY.text, out yVal)) return;
             float zVal;
-            if (!float.TryParse(ScaleZ.text, out zVal))
-            {
-                return;
-            }
-            for (int i = 0; i < m_transforms.Length; ++i)
-            {
-                m_transforms[i].localScale = new Vector3(xVal, yVal, zVal);
-            }
+            if (!float.TryParse(ScaleZ.text, out zVal)) return;
+            for (var i = 0; i < m_transforms.Length; ++i) m_transforms[i].localScale = new Vector3(xVal, yVal, zVal);
         }
 
         private void EndEditField(InputField field)
         {
             float val;
-            if (!float.TryParse(field.text, out val))
-            {
-                field.text = "0";
-            }
+            if (!float.TryParse(field.text, out val)) field.text = "0";
         }
 
         private void OnEndEdit(string value)
@@ -256,11 +200,7 @@ namespace Battlehub.RTEditor
 
         private void OnTransformChanged(ExposeToEditor obj)
         {
-            
-            if (!m_selectedGameObjects.Contains(obj.gameObject))
-            {
-                return;
-            }
+            if (!m_selectedGameObjects.Contains(obj.gameObject)) return;
 
             m_handleTransformChange = false;
             UpdateAllFields();
@@ -269,9 +209,8 @@ namespace Battlehub.RTEditor
 
         private void OnRuntimeSelectionChanged(Object[] unselected)
         {
-            
-            GameObject[] gameObjects = RuntimeSelection.gameObjects;
-            if(gameObjects == null)
+            var gameObjects = RuntimeSelection.gameObjects;
+            if (gameObjects == null)
             {
                 m_selectedGameObjects.Clear();
 
@@ -282,11 +221,9 @@ namespace Battlehub.RTEditor
             else
             {
                 m_selectedGameObjects.Clear();
-                m_transforms = gameObjects.Where(g => g.GetComponent<ExposeToEditor>()).Select(g => g.GetComponent<Transform>()).Where(t => t.GetType() == typeof(Transform)).ToArray();
-                for(int i = 0; i < m_transforms.Length; ++i)
-                {
-                    m_selectedGameObjects.Add(m_transforms[i].gameObject);
-                }
+                m_transforms = gameObjects.Where(g => g.GetComponent<ExposeToEditor>())
+                    .Select(g => g.GetComponent<Transform>()).Where(t => t.GetType() == typeof(Transform)).ToArray();
+                for (var i = 0; i < m_transforms.Length; ++i) m_selectedGameObjects.Add(m_transforms[i].gameObject);
 
                 if (m_transforms.Length > 0)
                 {
@@ -330,13 +267,9 @@ namespace Battlehub.RTEditor
         private void SetFieldValue(InputField field, IEnumerable<float> values)
         {
             if (values.Any(p => p != values.First()))
-            {
                 field.text = string.Empty;
-            }
             else
-            {
                 field.text = values.First().ToString();
-            }
         }
 
         private void OnResetClick()
@@ -356,10 +289,7 @@ namespace Battlehub.RTEditor
 
         private void OnEnableDisableValueChanged(bool value)
         {
-            for (int i = 0; i < m_transforms.Length; ++i)
-            {
-                m_transforms[i].gameObject.SetActive(value);
-            }
+            for (var i = 0; i < m_transforms.Length; ++i) m_transforms[i].gameObject.SetActive(value);
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
-namespace geniikw.DataRenderer2D.Polygon {
-    public static class PolygonFactory {
-
+namespace geniikw.DataRenderer2D.Polygon
+{
+    public static class PolygonFactory
+    {
         public static IEnumerable<IMesh> Create(IUnitSize unit, IPolygon target)
         {
             var circle = new CircleCalculator(target, unit);

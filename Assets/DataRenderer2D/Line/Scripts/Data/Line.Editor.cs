@@ -1,18 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using System;
 
 namespace geniikw.DataRenderer2D
 {
     public partial struct Spline
     {
-        public void Initialize() {
+        public int Count
+        {
+            get
+            {
+                if (mode == LineMode.BezierMode)
+                    return 2;
+                return points.Count;
+            }
+        }
+
+        public void Initialize()
+        {
             this = Default;
         }
 
         /// <summary>
-        /// 중간에 p.position이 worldposition에서  localposition으로 바꿈.
+        ///     중간에 p.position이 worldposition에서  localposition으로 바꿈.
         /// </summary>
         /// <param name="p"></param>
         public void Push(Point p)
@@ -41,14 +50,8 @@ namespace geniikw.DataRenderer2D
 
         public void EditPoint(int idx, Point p)
         {
-            if(mode == LineMode.BezierMode &&( idx <0 || idx > 2))
-            {
-                throw new Exception("can't edit");
-            }
-            if (points.Count <= idx || idx < 0)
-            {
-                throw new Exception("can't edit" + points.Count + " " + idx);
-            }
+            if (mode == LineMode.BezierMode && (idx < 0 || idx > 2)) throw new Exception("can't edit");
+            if (points.Count <= idx || idx < 0) throw new Exception("can't edit" + points.Count + " " + idx);
 
             p.position = owner.transform.InverseTransformPoint(p.position);
             if (mode == LineMode.BezierMode)
@@ -68,7 +71,7 @@ namespace geniikw.DataRenderer2D
         }
 
         /// <summary>
-        /// edit last point.
+        ///     edit last point.
         /// </summary>
         /// <param name="worldPos"></param>
         public void EditPoint(Vector3 worldPos)
@@ -83,11 +86,11 @@ namespace geniikw.DataRenderer2D
 
         public void EditPoint(int idx, Vector3 worldPos, float width)
         {
-            EditPoint(idx,worldPos, Vector3.zero, Vector3.zero, width);
+            EditPoint(idx, worldPos, Vector3.zero, Vector3.zero, width);
         }
 
         /// <summary>
-        /// remove last point
+        ///     remove last point
         /// </summary>
         /// <returns></returns>
         public Point Pop()
@@ -103,22 +106,12 @@ namespace geniikw.DataRenderer2D
 
             return last;
         }
-        
-        public int Count
-        {
-            get
-            {
-                if (mode == LineMode.BezierMode)
-                    return 2;
-                return points.Count;
-            }
-        }
+
         public void Clear()
         {
             points.Clear();
             if (EditCallBack != null)
                 EditCallBack();
         }
-
     }
 }

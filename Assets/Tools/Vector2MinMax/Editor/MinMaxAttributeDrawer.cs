@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,12 +19,14 @@ public class MinMaxAttributeDrawer : PropertyDrawer
 
             var remainingWidth = position.width - EditorGUIUtility.labelWidth - 6;
 
-            var minMaxRect = new Rect(position.x + EditorGUIUtility.labelWidth + 2, position.y, remainingWidth / 2f - 2, position.height);
+            var minMaxRect = new Rect(position.x + EditorGUIUtility.labelWidth + 2, position.y, remainingWidth / 2f - 2,
+                position.height);
             EditorGUI.MinMaxSlider(minMaxRect, ref vector2.x, ref vector2.y, attr.Min, attr.Max);
 
-            var multiFloatRect = new Rect(position.x + EditorGUIUtility.labelWidth + remainingWidth / 2 + 4 , position.y, remainingWidth / 2, position.height);
-            float[] values = new float[2] { vector2.x, vector2.y };
-            EditorGUI.MultiFloatField(multiFloatRect, new GUIContent[2] { new GUIContent(""), new GUIContent("") }, values);
+            var multiFloatRect = new Rect(position.x + EditorGUIUtility.labelWidth + remainingWidth / 2 + 4, position.y,
+                remainingWidth / 2, position.height);
+            var values = new float[2] { vector2.x, vector2.y };
+            EditorGUI.MultiFloatField(multiFloatRect, new GUIContent[2] { new(""), new("") }, values);
             vector2.x = values[0];
             vector2.y = values[1];
 

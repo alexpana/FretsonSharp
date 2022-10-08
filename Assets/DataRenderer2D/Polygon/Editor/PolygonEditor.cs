@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.UI;
 
 namespace geniikw.DataRenderer2D.Polygon.Editors
@@ -15,8 +12,8 @@ namespace geniikw.DataRenderer2D.Polygon.Editors
         {
             base.OnEnable();
             m_data = serializedObject.FindProperty("data");
-            
         }
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -24,7 +21,7 @@ namespace geniikw.DataRenderer2D.Polygon.Editors
             serializedObject.Update();
             EditorGUILayout.PropertyField(m_data, true);
 
-            serializedObject.ApplyModifiedProperties();   
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

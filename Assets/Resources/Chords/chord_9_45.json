@@ -1,1 +1,163 @@
-{"results":[{"id":2228,"key":"2228","strings":[[{"fretNo":2,"symbol":"3"}],[{"fretNo":2,"symbol":"2"}],[{"fretNo":0,"symbol":null}],[{"fretNo":1,"symbol":"1"}],[{"fretNo":0,"isRootNote":true,"symbol":null}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":9,"typeId":45,"isVariation":true,"shape":"2-2-0-1"},{"id":2227,"key":"2227","strings":[[{"fretNo":7,"barre":1,"symbol":"4"}],[{"fretNo":7,"barre":true,"symbol":"4"}],[{"fretNo":6,"symbol":"3"}],[{"fretNo":5,"barre":2,"symbol":"1"}],[{"fretNo":6,"symbol":"2"}],[{"fretNo":5,"isRootNote":true,"barre":true,"symbol":"1"}]],"firstFret":4,"variation":2,"realVariation":99,"rootNoteId":9,"typeId":45,"isVariation":true,"shape":"3-3-2-1-2-1"},{"id":2229,"key":"2229","strings":[[{"fretNo":14,"symbol":"4"}],[{"fretNo":14,"symbol":"3"}],[{"fretNo":12,"barre":2,"symbol":"1"}],[{"fretNo":13,"symbol":"2"}],[{"fretNo":12,"isRootNote":true,"barre":true,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":10,"variation":3,"realVariation":99,"rootNoteId":9,"typeId":45,"isVariation":true,"shape":"3-3-1-2-1"}],"message":null}
+{
+  "results": [
+    {
+      "id": 2228,
+      "key": "2228",
+      "strings": [
+        [
+          {
+            "fretNo": 2,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 2,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "symbol": null
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isRootNote": true,
+            "symbol": null
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 9,
+      "typeId": 45,
+      "isVariation": true,
+      "shape": "2-2-0-1"
+    },
+    {
+      "id": 2227,
+      "key": "2227",
+      "strings": [
+        [
+          {
+            "fretNo": 7,
+            "barre": 1,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 7,
+            "barre": true,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "barre": 2,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "isRootNote": true,
+            "barre": true,
+            "symbol": "1"
+          }
+        ]
+      ],
+      "firstFret": 4,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 9,
+      "typeId": 45,
+      "isVariation": true,
+      "shape": "3-3-2-1-2-1"
+    },
+    {
+      "id": 2229,
+      "key": "2229",
+      "strings": [
+        [
+          {
+            "fretNo": 14,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 14,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 12,
+            "barre": 2,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 12,
+            "isRootNote": true,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 9,
+      "typeId": 45,
+      "isVariation": true,
+      "shape": "3-3-1-2-1"
+    }
+  ],
+  "message": null
+}

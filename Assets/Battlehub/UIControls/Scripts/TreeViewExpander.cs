@@ -7,18 +7,19 @@ namespace Battlehub.UIControls
     public class TreeViewExpander : MonoBehaviour
     {
         public Graphic OffGraphic;
-        private Toggle m_toggle;
 
         private bool m_canExpand;
+        private Toggle m_toggle;
+
         public bool CanExpand
         {
-            get { return m_canExpand; }
+            get => m_canExpand;
             set
             {
                 m_canExpand = value;
-                if(!m_canExpand)
+                if (!m_canExpand)
                 {
-                    if(m_toggle != null)
+                    if (m_toggle != null)
                     {
                         m_toggle.isOn = false;
                         m_toggle.enabled = false;
@@ -29,48 +30,37 @@ namespace Battlehub.UIControls
                     if (m_toggle != null)
                     {
                         m_toggle.enabled = true;
-                        if(!IsOn)
-                        {
-                            OffGraphic.enabled = true;
-                        }
+                        if (!IsOn) OffGraphic.enabled = true;
                     }
                 }
             }
         }
-        
+
         public bool IsOn
         {
-            get { return m_toggle.isOn; }
-            set
-            {
-                m_toggle.isOn = value && m_canExpand;   
-            }
+            get => m_toggle.isOn;
+            set => m_toggle.isOn = value && m_canExpand;
         }
 
         private void Start()
         {
             m_toggle = GetComponent<Toggle>();
-            if(!m_canExpand)
+            if (!m_canExpand)
             {
                 m_toggle.isOn = false;
                 m_toggle.enabled = false;
             }
-            if(OffGraphic != null)
-            {
-                OffGraphic.enabled = !m_toggle.isOn && m_canExpand;
-            }
-            
+
+            if (OffGraphic != null) OffGraphic.enabled = !m_toggle.isOn && m_canExpand;
+
             m_toggle.onValueChanged.AddListener(OnValueChanged);
         }
 
         private void OnEnable()
         {
-            if(m_toggle != null)
+            if (m_toggle != null)
             {
-                if (OffGraphic != null)
-                {
-                    OffGraphic.enabled = !m_toggle.isOn && m_canExpand;
-                }
+                if (OffGraphic != null) OffGraphic.enabled = !m_toggle.isOn && m_canExpand;
 
                 if (!m_canExpand)
                 {
@@ -79,18 +69,13 @@ namespace Battlehub.UIControls
                     m_toggle.isOn = false;
                     m_toggle.onValueChanged.AddListener(OnValueChanged);
                     m_toggle.enabled = false;
-                    
                 }
             }
-           
         }
 
         private void OnDestroy()
         {
-            if(m_toggle != null)
-            {
-                m_toggle.onValueChanged.RemoveListener(OnValueChanged);
-            }
+            if (m_toggle != null) m_toggle.onValueChanged.RemoveListener(OnValueChanged);
         }
 
         private void OnValueChanged(bool value)
@@ -100,11 +85,8 @@ namespace Battlehub.UIControls
                 m_toggle.isOn = false;
                 m_toggle.enabled = false;
             }
-            if (OffGraphic != null)
-            {
-                OffGraphic.enabled = !value && m_canExpand;
-            }
-            
+
+            if (OffGraphic != null) OffGraphic.enabled = !value && m_canExpand;
         }
     }
 }

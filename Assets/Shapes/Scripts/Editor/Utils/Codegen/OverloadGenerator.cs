@@ -6,152 +6,172 @@ using UnityEngine;
 
 // Shapes © Freya Holmér - https://twitter.com/FreyaHolmer/
 // Website & Documentation - https://acegikmo.com/shapes/
-namespace Shapes {
+namespace Shapes
+{
+    public class TargetArg
+    {
+        public string @default = null;
+        public string name;
 
-	public class TargetArg {
-		public string name;
-		public string @default = null;
-		public bool HasDefault => @default != null;
+        public TargetArg(ParameterInfo param)
+        {
+            name = param.Name;
+            @default = (Attribute.GetCustomAttribute(param, typeof(OvldDefault)) as OvldDefault)?.@default;
+        }
 
-		public TargetArg( ParameterInfo param ) {
-			name = param.Name;
-			@default = ( Attribute.GetCustomAttribute( param, typeof(OvldDefault) ) as OvldDefault )?.@default;
-		}
+        public bool HasDefault => @default != null;
+    }
 
-	}
+    internal class TargetMethodCall
+    {
+        public TargetArg[] args;
+        public string name;
 
-	class TargetMethodCall {
-		public string name;
-		public TargetArg[] args;
+        public TargetMethodCall(MethodInfo method)
+        {
+            name = method.Name;
+            args = method.GetParameters().Select(p => new TargetArg(p)).ToArray();
+        }
+    }
 
-		public TargetMethodCall( MethodInfo method ) {
-			name = method.Name;
-			args = method.GetParameters().Select( p => new TargetArg( p ) ).ToArray();
-		}
+    internal class OverloadGenerator
+    {
+        private const string fBodyIndent = "\t";
+        public Dictionary<string, string> constAssigns = new();
+        public string objectName;
+        public string overloadName;
+        public List<IParamSelector> paramSelectors = new();
+        public string summary;
+        public TargetMethodCall targetCall;
 
-	}
+        public OverloadGenerator(string overloadName, TargetMethodCall targetCall, string summary)
+        {
+            this.summary = summary;
+            this.overloadName = overloadName;
+            objectName = overloadName; // default to this! though not always applicable
+            this.targetCall = targetCall;
+        }
 
-	class OverloadGenerator {
-		public string overloadName;
-		public string objectName;
-		public string summary;
-		public TargetMethodCall targetCall;
-		public List<IParamSelector> paramSelectors = new List<IParamSelector>();
-		public Dictionary<string, string> constAssigns = new Dictionary<string, string>();
+        public static OverloadGenerator operator +(OverloadGenerator a, IParamSelector b)
+        {
+            a.paramSelectors.Add(b);
+            return a;
+        }
 
-		public OverloadGenerator( string overloadName, TargetMethodCall targetCall, string summary ) {
-			this.summary = summary;
-			this.overloadName = overloadName;
-			this.objectName = overloadName; // default to this! though not always applicable
-			this.targetCall = targetCall;
-		}
+        public static OverloadGenerator operator +(OverloadGenerator a, string s)
+        {
+            a.paramSelectors.Add((Param)s);
+            return a;
+        }
 
-		public static OverloadGenerator operator +( OverloadGenerator a, IParamSelector b ) {
-			a.paramSelectors.Add( b );
-			return a;
-		}
+        public void GenerateAndAppend(List<string> lines)
+        {
+            lines.AddRange(GenerateOverloads(paramSelectors.ToArray()));
+        }
 
-		public static OverloadGenerator operator +( OverloadGenerator a, string s ) {
-			a.paramSelectors.Add( (Param)s );
-			return a;
-		}
+        private List<string> GenerateOverloads(params IParamSelector[] overloadParams)
+        {
+            var totalVariants = overloadParams.Product(o => o.Variants); // calc variant count
+            Debug.Log($"Gen: {totalVariants} {overloadName} variants");
 
-		public void GenerateAndAppend( List<string> lines ) => lines.AddRange( GenerateOverloads( paramSelectors.ToArray() ) );
+            var overloads = new List<string>();
+            RecurseParams(new int[overloadParams.Length], 0);
 
-		List<string> GenerateOverloads( params IParamSelector[] overloadParams ) {
-			int totalVariants = overloadParams.Product( o => o.Variants ); // calc variant count
-			Debug.Log( $"Gen: {totalVariants} {overloadName} variants" );
+            void RecurseParams(int[] variantIndices, int paramSelIndex)
+            {
+                if (paramSelIndex < overloadParams.Length)
+                {
+                    for (var i = 0; i < overloadParams[paramSelIndex].Variants; i++)
+                    {
+                        variantIndices[paramSelIndex] = i;
+                        RecurseParams(variantIndices, paramSelIndex + 1);
+                    }
+                }
+                else
+                {
+                    // we've reached the end of an overload variant
+                    var overloadVariantParams = new List<Param>();
+                    for (var i = 0; i < overloadParams.Length; i++)
+                    {
+                        var adds = overloadParams[i].GetVariant(variantIndices[i]);
+                        if (adds != null)
+                            overloadVariantParams.AddRange(adds);
+                    }
 
-			List<string> overloads = new List<string>();
-			RecurseParams( new int[overloadParams.Length], 0 );
+                    overloads.Add(GetOverloadStr(overloadVariantParams));
+                }
+            }
 
-			void RecurseParams( int[] variantIndices, int paramSelIndex ) {
-				if( paramSelIndex < overloadParams.Length ) {
-					for( int i = 0; i < overloadParams[paramSelIndex].Variants; i++ ) {
-						variantIndices[paramSelIndex] = i;
-						RecurseParams( variantIndices, paramSelIndex + 1 );
-					}
-				} else {
-					// we've reached the end of an overload variant
-					List<Param> overloadVariantParams = new List<Param>();
-					for( int i = 0; i < overloadParams.Length; i++ ) {
-						Param[] adds = overloadParams[i].GetVariant( variantIndices[i] );
-						if( adds != null )
-							overloadVariantParams.AddRange( adds );
-					}
+            return overloads;
+        }
 
-					overloads.Add( GetOverloadStr( overloadVariantParams ) );
-				}
-			}
+        private string GetOverloadStr(List<Param> overloadParams)
+        {
+            // docs
+            var inlineDocs = $"/// <summary>{summary}</summary>";
 
-			return overloads;
-		}
+            // actual function
+            var overloadParamsStr = string.Join(", ", overloadParams.Select(p => p.FullMethodSig));
 
-		string GetOverloadStr( List<Param> overloadParams ) {
-			// docs
-			string inlineDocs = $"/// <summary>{summary}</summary>";
+            // matrix setup and documentation depends only on input parameters
+            var mtxFlags = Param.MtxFlags.None;
+            overloadParams.ForEach(p => mtxFlags |= p.mtxFlags);
+            overloadParams.ForEach(p =>
+                inlineDocs +=
+                    $"<param name=\"{p.methodSigName}\">{p.desc.Replace("[OBJECTNAME]", objectName.ToLowerInvariant())}</param>");
 
-			// actual function
-			string overloadParamsStr = string.Join( ", ", overloadParams.Select( p => p.FullMethodSig ) );
+            // foreach argument in the target function call
+            var callParams = "";
+            foreach (var arg in targetCall.args)
+            {
+                var overloadParam = overloadParams.FirstOrDefault(p => p.targetArgNames.Contains(arg.name));
+                if (overloadParam != null) // see if we have an overload param
+                    callParams += overloadParam.methodCallStr;
+                else if (constAssigns.ContainsKey(arg.name)) // see if we have any constant arguments
+                    callParams += constAssigns[arg.name];
+                else if (arg.HasDefault) // see if we have a default value
+                    callParams += arg.@default;
+                else // else default to error :c
+                    callParams += $"<color=#f00>[MISSING {arg.name}]</color>";
 
-			// matrix setup and documentation depends only on input parameters
-			Param.MtxFlags mtxFlags = Param.MtxFlags.None;
-			overloadParams.ForEach( p => mtxFlags |= p.mtxFlags );
-			overloadParams.ForEach( p => inlineDocs += $"<param name=\"{p.methodSigName}\">{p.desc.Replace( "[OBJECTNAME]", objectName.ToLowerInvariant() )}</param>" );
+                callParams += ", ";
+            }
 
-			// foreach argument in the target function call
-			string callParams = "";
-			foreach( TargetArg arg in targetCall.args ) {
-				Param overloadParam = overloadParams.FirstOrDefault( p => p.targetArgNames.Contains( arg.name ) );
-				if( overloadParam != null ) { // see if we have an overload param
-					callParams += overloadParam.methodCallStr;
-				} else if( constAssigns.ContainsKey( arg.name ) ) // see if we have any constant arguments
-					callParams += constAssigns[arg.name];
-				else if( arg.HasDefault ) // see if we have a default value
-					callParams += arg.@default;
-				else // else default to error :c
-					callParams += $"<color=#f00>[MISSING {arg.name}]</color>";
+            callParams = callParams.Substring(0, callParams.Length - 2); // remove last comma
 
-				callParams += ", ";
-			}
+            if (string.IsNullOrEmpty(overloadParamsStr) == false)
+                overloadParamsStr = $" {overloadParamsStr} "; // formatting, make empty ones not have spaces inside
+            var functionHeader =
+                $"{inlineDocs}\n[MethodImpl( INLINE )] public static void {overloadName}({overloadParamsStr})";
+            var drawFuncCall = CodegenDrawOverloads.DEBUG_WRITE_EMPTY_BODIES
+                ? "_ = 0"
+                : $"{targetCall.name}( {callParams} )";
 
-			callParams = callParams.Substring( 0, callParams.Length - 2 ); // remove last comma
+            if (mtxFlags == Param.MtxFlags.None) // inline function body
+                return $"{functionHeader} => {drawFuncCall};";
+            return $"{functionHeader} {{\n" +
+                   $"{fBodyIndent}Draw.PushMatrix();\n" +
+                   $"{fBodyIndent}{GetTransformation(mtxFlags)};\n" +
+                   $"{fBodyIndent}{drawFuncCall};\n" +
+                   $"{fBodyIndent}Draw.PopMatrix();\n" +
+                   "}";
+        }
 
-			if( string.IsNullOrEmpty( overloadParamsStr ) == false )
-				overloadParamsStr = $" {overloadParamsStr} "; // formatting, make empty ones not have spaces inside
-			string functionHeader = $"{inlineDocs}\n[MethodImpl( INLINE )] public static void {overloadName}({overloadParamsStr})";
-			string drawFuncCall = CodegenDrawOverloads.DEBUG_WRITE_EMPTY_BODIES ? "_ = 0" : $"{targetCall.name}( {callParams} )";
-
-			if( mtxFlags == Param.MtxFlags.None ) {
-				// inline function body
-				return $"{functionHeader} => {drawFuncCall};";
-			} else {
-				// multi-line function body
-				return $"{functionHeader} {{\n" +
-					   $"{fBodyIndent}Draw.PushMatrix();\n" +
-					   $"{fBodyIndent}{GetTransformation( mtxFlags )};\n" +
-					   $"{fBodyIndent}{drawFuncCall};\n" +
-					   $"{fBodyIndent}Draw.PopMatrix();\n" +
-					   $"}}";
-			}
-		}
-
-		const string fBodyIndent = "\t";
-
-		static string GetTransformation( Param.MtxFlags flags ) {
-			switch( flags ) {
-				case Param.MtxFlags.Position:  return $"Draw.Translate( pos )"; // position only, no rotation
-				case Param.MtxFlags.Angle:     return $"Draw.Rotate( angle )"; // angle only, no rotation (TMP)
-				case Param.MtxFlags.PosRot:    return $"Draw.Matrix *= Matrix4x4.TRS( pos, rot, Vector3.one )";
-				case Param.MtxFlags.PosNormal: return $"Draw.Matrix *= Matrix4x4.TRS( pos, Quaternion.LookRotation( normal ), Vector3.one )";
-				case Param.MtxFlags.PosAngle:  return $"Draw.Translate( pos );\n{fBodyIndent}Draw.Rotate( angle )"; // pos + z angle (TMP)
-				default:
-					Debug.LogWarning( $"Invalid matrix configuration: {flags.ToString()}" );
-					return "";
-			}
-		}
-
-
-	}
-
+        private static string GetTransformation(Param.MtxFlags flags)
+        {
+            switch (flags)
+            {
+                case Param.MtxFlags.Position: return "Draw.Translate( pos )"; // position only, no rotation
+                case Param.MtxFlags.Angle: return "Draw.Rotate( angle )"; // angle only, no rotation (TMP)
+                case Param.MtxFlags.PosRot: return "Draw.Matrix *= Matrix4x4.TRS( pos, rot, Vector3.one )";
+                case Param.MtxFlags.PosNormal:
+                    return "Draw.Matrix *= Matrix4x4.TRS( pos, Quaternion.LookRotation( normal ), Vector3.one )";
+                case Param.MtxFlags.PosAngle:
+                    return $"Draw.Translate( pos );\n{fBodyIndent}Draw.Rotate( angle )"; // pos + z angle (TMP)
+                default:
+                    Debug.LogWarning($"Invalid matrix configuration: {flags.ToString()}");
+                    return "";
+            }
+        }
+    }
 }

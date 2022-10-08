@@ -1,37 +1,19 @@
-﻿using geniikw.DataRenderer2D;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace geniikw.DataRenderer2D
 {
     /// <summary>
-    /// draw mesh in canvas
+    ///     draw mesh in canvas
     /// </summary>
-    public partial class UILine : UIDataMesh , ISpline
+    public class UILine : UIDataMesh, ISpline
     {
         public Spline line;
 
-        /// <summary>
-        /// hard copy.
-        /// </summary>
-        Spline ISpline.Line
-        {
-            get
-            {
-                return line;
-            }
-        }
+        private IEnumerable<IMesh> m_Drawer = null;
 
-        IEnumerable<IMesh> m_Drawer = null;
-        protected override IEnumerable<IMesh> DrawerFactory
-        {
-            get
-            {
-                return m_Drawer ?? (m_Drawer = LineBuilder.Factory.Normal(this, transform).Draw());
-            }
-        }
+        protected override IEnumerable<IMesh> DrawerFactory =>
+            m_Drawer ?? (m_Drawer = LineBuilder.Factory.Normal(this, transform).Draw());
 
         protected override void Start()
         {
@@ -39,7 +21,12 @@ namespace geniikw.DataRenderer2D
             line.owner = this;
             line.EditCallBack += GeometyUpdateFlagUp;
         }
-        
+
+        /// <summary>
+        ///     hard copy.
+        /// </summary>
+        Spline ISpline.Line => line;
+
         public static UILine CreateLine(Transform parent = null)
         {
             var go = new GameObject("UILine");
@@ -53,5 +40,4 @@ namespace geniikw.DataRenderer2D
             return line;
         }
     }
-    
 }

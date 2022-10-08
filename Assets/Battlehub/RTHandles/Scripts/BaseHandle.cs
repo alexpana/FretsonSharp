@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Battlehub.RTHandles
 {
@@ -9,7 +8,7 @@ namespace Battlehub.RTHandles
         Move,
         Rotate,
         Scale,
-        View,
+        View
     }
 
     public enum RuntimePivotRotation
@@ -19,226 +18,113 @@ namespace Battlehub.RTHandles
     }
 
     public delegate void RuntimeToolChanged();
+
     public delegate void RuntimePivotRotationChanged();
+
     public static class RuntimeTools
     {
-        public static event RuntimeToolChanged ToolChanged;
-        public static event RuntimePivotRotationChanged PivotRotationChanged;
-
         private static RuntimeTool m_current;
         private static RuntimePivotRotation m_pivotRotation;
 
-        public static bool IsLocked
-        {
-            get;
-            set;
-        }
+        public static bool IsLocked { get; set; }
 
-        public static bool IsDragDrop
-        {
-            get;
-            set;
-        }
+        public static bool IsDragDrop { get; set; }
 
-        public static bool IsSceneGizmoSelected
-        {
-            get;
-            set;
-        }
+        public static bool IsSceneGizmoSelected { get; set; }
 
         public static RuntimeTool Current
         {
-            get { return m_current; }
+            get => m_current;
             set
             {
-                if(m_current != value)
+                if (m_current != value)
                 {
                     m_current = value;
-                    if(ToolChanged != null)
-                    {
-                        ToolChanged();
-                    }
+                    if (ToolChanged != null) ToolChanged();
                 }
             }
         }
 
         public static RuntimePivotRotation PivotRotation
         {
-            get { return m_pivotRotation; }
+            get => m_pivotRotation;
             set
             {
-                if(m_pivotRotation != value)
+                if (m_pivotRotation != value)
                 {
                     m_pivotRotation = value;
-                    if(PivotRotationChanged != null)
-                    {
-                        PivotRotationChanged();
-                    }
+                    if (PivotRotationChanged != null) PivotRotationChanged();
                 }
             }
         }
+
+        public static event RuntimeToolChanged ToolChanged;
+        public static event RuntimePivotRotationChanged PivotRotationChanged;
     }
 
     public abstract class BaseHandle : MonoBehaviour, IGL
     {
-        protected float EffectiveGridSize
-        {
-            get;
-            private set;
-        }
+        private static BaseHandle m_draggingTool;
 
         public KeyCode SnapToGridKey = KeyCode.LeftControl;
         public Camera Camera;
         public float SelectionMargin = 10;
         public Transform[] Targets;
-        public Transform Target
-        {
-            get { return Targets[0];}
-        }
-        private static BaseHandle m_draggingTool;
 
-        private RuntimeHandleAxis m_selectedAxis;
-        private bool m_isDragging;
-        private Plane m_dragPlane;
+        protected float EffectiveGridSize { get; private set; }
 
-        public bool IsDragging
-        {
-            get { return m_isDragging; }
-        }
+        public Transform Target => Targets[0];
 
-        protected abstract RuntimeTool Tool
-        {
-            get;
-        }
+        public bool IsDragging { get; private set; }
+
+        protected abstract RuntimeTool Tool { get; }
 
         protected Quaternion Rotation
         {
             get
             {
-                if(Targets == null || Targets.Length <= 0 || Target == null)
-                {
-                    return Quaternion.identity;
-                }
+                if (Targets == null || Targets.Length <= 0 || Target == null) return Quaternion.identity;
 
                 return RuntimeTools.PivotRotation == RuntimePivotRotation.Local ? Target.rotation : Quaternion.identity;
             }
         }
 
-        protected RuntimeHandleAxis SelectedAxis
-        {
-            get { return m_selectedAxis; }
-            set { m_selectedAxis = value; }
-        }
+        protected RuntimeHandleAxis SelectedAxis { get; set; }
 
-        protected Plane DragPlane
-        {
-            get { return m_dragPlane; }
-            set { m_dragPlane = value; }
-        }
+        protected Plane DragPlane { get; set; }
 
-        protected abstract float CurrentGridSize
-        {
-            get;
-        }
+        protected abstract float CurrentGridSize { get; }
 
         private void Start()
         {
-            if (Camera == null)
-            {
-                Camera = Camera.main;
-            }
+            if (Camera == null) Camera = Camera.main;
 
             if (GLRenderer.Instance == null)
             {
-                GameObject glRenderer = new GameObject();
+                var glRenderer = new GameObject();
                 glRenderer.name = "GLRenderer";
-                glRenderer.AddComponent<GLRenderer>();   
+                glRenderer.AddComponent<GLRenderer>();
             }
 
             if (Camera != null)
-            {
-                if(!Camera.GetComponent<GLCamera>())
-                {
+                if (!Camera.GetComponent<GLCamera>())
                     Camera.gameObject.AddComponent<GLCamera>();
-                }   
-            }
 
-            if (Targets == null || Targets.Length == 0)
-            {
-                Targets = new[] { transform };
-            }
+            if (Targets == null || Targets.Length == 0) Targets = new[] { transform };
 
-            if (GLRenderer.Instance != null)
-            {
-                GLRenderer.Instance.Add(this);
-            }
+            if (GLRenderer.Instance != null) GLRenderer.Instance.Add(this);
 
-            if (Targets[0].position != transform.position)
-            {
-                transform.position = Targets[0].position;
-            }
+            if (Targets[0].position != transform.position) transform.position = Targets[0].position;
 
             StartOverride();
-        }
-
-        protected virtual void StartOverride()
-        {
-
-        }
-
-        private void OnEnable()
-        {
-            if (GLRenderer.Instance != null)
-            {
-                GLRenderer.Instance.Add(this);
-            }
-
-            OnEnableOverride();
-        }
-
-        protected virtual void OnEnableOverride()
-        {
-
-        }
-
-        private void OnDisable()
-        {
-            if (GLRenderer.Instance != null)
-            {
-                GLRenderer.Instance.Remove(this);
-            }
-
-            OnDisableOverride();
-        }
-
-        protected virtual void OnDisableOverride()
-        {
-
-        }
-
-        private void OnDestroy()
-        {
-            if (GLRenderer.Instance != null)
-            {
-                GLRenderer.Instance.Remove(this);
-            }
-
-            OnDestroyOverride();
-        }
-
-        protected virtual void OnDestroyOverride()
-        {
-
         }
 
         private void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (RuntimeTools.Current != Tool && RuntimeTools.Current != RuntimeTool.None || RuntimeTools.IsLocked)
-                {
-                    return;
-                }
+                if ((RuntimeTools.Current != Tool && RuntimeTools.Current != RuntimeTool.None) ||
+                    RuntimeTools.IsLocked) return;
 
                 if (Camera == null)
                 {
@@ -246,41 +132,73 @@ namespace Battlehub.RTHandles
                     return;
                 }
 
-                if(m_draggingTool != null)
-                {
-                    return;
-                }
+                if (m_draggingTool != null) return;
 
-                m_isDragging = OnBeginDrag();
-                if(m_isDragging)
-                {
-                    m_draggingTool = this; 
-                }
+                IsDragging = OnBeginDrag();
+                if (IsDragging) m_draggingTool = this;
             }
             else if (Input.GetMouseButtonUp(0))
             {
                 OnDrop();
-                m_isDragging = false;
+                IsDragging = false;
                 m_draggingTool = null;
             }
             else
             {
-                if (m_isDragging)
+                if (IsDragging)
                 {
-                    if(Input.GetKey(SnapToGridKey))
-                    {
+                    if (Input.GetKey(SnapToGridKey))
                         EffectiveGridSize = CurrentGridSize;
-                    }
                     else
-                    {
                         EffectiveGridSize = 0;
-                    }
 
                     OnDrag();
                 }
             }
 
             UpdateOverride();
+        }
+
+        private void OnEnable()
+        {
+            if (GLRenderer.Instance != null) GLRenderer.Instance.Add(this);
+
+            OnEnableOverride();
+        }
+
+        private void OnDisable()
+        {
+            if (GLRenderer.Instance != null) GLRenderer.Instance.Remove(this);
+
+            OnDisableOverride();
+        }
+
+        private void OnDestroy()
+        {
+            if (GLRenderer.Instance != null) GLRenderer.Instance.Remove(this);
+
+            OnDestroyOverride();
+        }
+
+        void IGL.Draw()
+        {
+            DrawOverride();
+        }
+
+        protected virtual void StartOverride()
+        {
+        }
+
+        protected virtual void OnEnableOverride()
+        {
+        }
+
+        protected virtual void OnDisableOverride()
+        {
+        }
+
+        protected virtual void OnDestroyOverride()
+        {
         }
 
         protected virtual bool OnBeginDrag()
@@ -290,26 +208,22 @@ namespace Battlehub.RTHandles
 
         protected virtual void OnDrag()
         {
-
         }
 
         protected virtual void OnDrop()
         {
-
         }
 
         protected virtual void UpdateOverride()
         {
-            if (Targets != null && Targets.Length > 0 && Targets[0] != null && Targets[0].position != transform.position)
+            if (Targets != null && Targets.Length > 0 && Targets[0] != null &&
+                Targets[0].position != transform.position)
             {
                 if (IsDragging)
                 {
-                    Vector3 offset = transform.position - Targets[0].position;
+                    var offset = transform.position - Targets[0].position;
                     Targets[0].position = transform.position;
-                    for (int i = 1; i < Targets.Length; ++i)
-                    {
-                        Targets[i].position += offset;
-                    }
+                    for (var i = 1; i < Targets.Length; ++i) Targets[i].position += offset;
                 }
                 else
                 {
@@ -334,30 +248,29 @@ namespace Battlehub.RTHandles
             Vector2 screenVectorEnd = Camera.WorldToScreenPoint(axis + transform.position);
 
             Vector3 screenVector = screenVectorEnd - screenVectorBegin;
-            float screenVectorMag = screenVector.magnitude;
+            var screenVectorMag = screenVector.magnitude;
             screenVector.Normalize();
             if (screenVector != Vector3.zero)
             {
-                Vector2 perp = PerpendicularClockwise(screenVector).normalized;
+                var perp = PerpendicularClockwise(screenVector).normalized;
                 Vector2 mousePosition = Input.mousePosition;
-                Vector2 relMousePositon = mousePosition - screenVectorBegin;
+                var relMousePositon = mousePosition - screenVectorBegin;
 
                 distanceToAxis = Mathf.Abs(Vector2.Dot(perp, relMousePositon));
-                Vector2 hitPoint = (relMousePositon - perp * distanceToAxis);
-                float vectorSpaceCoord = Vector2.Dot(screenVector, hitPoint);
+                var hitPoint = relMousePositon - perp * distanceToAxis;
+                var vectorSpaceCoord = Vector2.Dot(screenVector, hitPoint);
 
-                bool result = vectorSpaceCoord <= screenVectorMag + SelectionMargin && vectorSpaceCoord >= -SelectionMargin && distanceToAxis <= SelectionMargin;
+                var result = vectorSpaceCoord <= screenVectorMag + SelectionMargin &&
+                             vectorSpaceCoord >= -SelectionMargin && distanceToAxis <= SelectionMargin;
                 if (!result)
                 {
                     distanceToAxis = float.PositiveInfinity;
                 }
                 else
                 {
-                    if (screenVectorMag < SelectionMargin)
-                    {
-                        distanceToAxis = 0.0f;
-                    }
+                    if (screenVectorMag < SelectionMargin) distanceToAxis = 0.0f;
                 }
+
                 return result;
             }
             else
@@ -365,41 +278,37 @@ namespace Battlehub.RTHandles
                 Vector2 mousePosition = Input.mousePosition;
 
                 distanceToAxis = (screenVectorBegin - mousePosition).magnitude;
-                bool result = distanceToAxis <= SelectionMargin;
+                var result = distanceToAxis <= SelectionMargin;
                 if (!result)
-                {
                     distanceToAxis = float.PositiveInfinity;
-                }
                 else
-                {
                     distanceToAxis = 0.0f;
-                }
                 return result;
             }
         }
 
         protected Plane GetDragPlane(Matrix4x4 matrix, Vector3 axis)
         {
-            Plane plane = new Plane(matrix.MultiplyVector(axis).normalized, matrix.MultiplyPoint(Vector3.zero));
+            var plane = new Plane(matrix.MultiplyVector(axis).normalized, matrix.MultiplyPoint(Vector3.zero));
             return plane;
-
         }
 
         protected Plane GetDragPlane()
         {
-            Vector3 toCam = Camera.cameraToWorldMatrix.MultiplyVector(Vector3.forward); //Camera.transform.position - transform.position;
-            Plane dragPlane = new Plane(toCam.normalized, transform.position);
+            var toCam = Camera.cameraToWorldMatrix
+                .MultiplyVector(Vector3.forward); //Camera.transform.position - transform.position;
+            var dragPlane = new Plane(toCam.normalized, transform.position);
             return dragPlane;
         }
 
         protected bool GetPointOnDragPlane(Vector3 screenPos, out Vector3 point)
         {
-            return GetPointOnDragPlane(m_dragPlane, screenPos, out point);
+            return GetPointOnDragPlane(DragPlane, screenPos, out point);
         }
 
         protected bool GetPointOnDragPlane(Plane dragPlane, Vector3 screenPos, out Vector3 point)
         {
-            Ray ray = Camera.ScreenPointToRay(screenPos);
+            var ray = Camera.ScreenPointToRay(screenPos);
             float distance;
             if (dragPlane.Raycast(ray, out distance))
             {
@@ -416,16 +325,8 @@ namespace Battlehub.RTHandles
             return new Vector2(-vector2.y, vector2.x);
         }
 
-        void IGL.Draw()
-        {
-            DrawOverride();
-        }
-
         protected virtual void DrawOverride()
         {
-
         }
-
-       
     }
 }

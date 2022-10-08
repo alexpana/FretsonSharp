@@ -1,16 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-
 
 namespace geniikw.DataRenderer2D
 {
     public struct Quad : IMesh
     {
-        Vertex _p0;
-        Vertex _p1;
-        Vertex _p2;
-        Vertex _p3;
+        private readonly Vertex _p0;
+        private readonly Vertex _p1;
+        private readonly Vertex _p2;
+        private readonly Vertex _p3;
 
 
         public Quad(Vertex p0, Vertex p1, Vertex p2, Vertex p3)
@@ -37,7 +35,6 @@ namespace geniikw.DataRenderer2D
                 yield return _p1;
                 yield return _p2;
                 yield return _p3;
-
             }
         }
 
@@ -45,7 +42,7 @@ namespace geniikw.DataRenderer2D
         {
             get
             {
-                var list = new int[] { 0, 2, 1, 1, 2, 3 };
+                var list = new[] { 0, 2, 1, 1, 2, 3 };
                 foreach (var number in list)
                     yield return number;
             }

@@ -2,34 +2,35 @@
 
 // Shapes © Freya Holmér - https://twitter.com/FreyaHolmer/
 // Website & Documentation - https://acegikmo.com/shapes/
-namespace Shapes {
+namespace Shapes
+{
+    [CustomEditor(typeof(Torus))]
+    [CanEditMultipleObjects]
+    public class TorusEditor : ShapeRendererEditor
+    {
+        private readonly SerializedProperty propAngRadiansEnd = null;
+        private readonly SerializedProperty propAngRadiansStart = null;
+        private readonly SerializedProperty propAngUnitInput = null;
 
-	[CustomEditor( typeof(Torus) )]
-	[CanEditMultipleObjects]
-	public class TorusEditor : ShapeRendererEditor {
+        private readonly SerializedProperty propRadius = null;
+        private readonly SerializedProperty propRadiusSpace = null;
+        private readonly SerializedProperty propThickness = null;
+        private readonly SerializedProperty propThicknessSpace = null;
 
-		SerializedProperty propRadius = null;
-		SerializedProperty propRadiusSpace = null;
-		SerializedProperty propThickness = null;
-		SerializedProperty propThicknessSpace = null;
-		SerializedProperty propAngRadiansStart = null;
-		SerializedProperty propAngRadiansEnd = null;
-		SerializedProperty propAngUnitInput = null;
+        public override void OnInspectorGUI()
+        {
+            BeginProperties();
+            ShapesUI.FloatInSpaceField(propRadius, propRadiusSpace);
+            ShapesUI.FloatInSpaceField(propThickness, propThicknessSpace);
+            DrawAngleProperties();
+            EndProperties();
+        }
 
-		public override void OnInspectorGUI() {
-			base.BeginProperties();
-			ShapesUI.FloatInSpaceField( propRadius, propRadiusSpace );
-			ShapesUI.FloatInSpaceField( propThickness, propThicknessSpace );
-			DrawAngleProperties();
-			base.EndProperties();
-		}
-
-		void DrawAngleProperties() {
-			ShapesUI.AngleProperty( propAngRadiansStart, "Angle start", propAngUnitInput, DiscEditor.angLabelLayout );
-			ShapesUI.AngleProperty( propAngRadiansEnd, "Angle end", propAngUnitInput, DiscEditor.angLabelLayout );
-			ShapesUI.DrawAngleSwitchButtons( propAngUnitInput );
-		}
-
-	}
-
+        private void DrawAngleProperties()
+        {
+            ShapesUI.AngleProperty(propAngRadiansStart, "Angle start", propAngUnitInput, DiscEditor.angLabelLayout);
+            ShapesUI.AngleProperty(propAngRadiansEnd, "Angle end", propAngUnitInput, DiscEditor.angLabelLayout);
+            ShapesUI.DrawAngleSwitchButtons(propAngUnitInput);
+        }
+    }
 }

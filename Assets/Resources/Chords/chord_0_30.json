@@ -1,1 +1,109 @@
-{"results":[{"id":101,"key":"101","strings":[[{"fretNo":4,"symbol":"4"}],[{"fretNo":4,"symbol":"3"}],[{"fretNo":3,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":3,"isRootNote":true,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":0,"typeId":30,"isVariation":true,"shape":"2-2-1-0-1"},{"id":100,"key":"100","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":9,"symbol":"4"}],[{"fretNo":8,"symbol":"3"}],[{"fretNo":8,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":8,"isRootNote":true,"symbol":"1"}]],"firstFret":6,"variation":2,"realVariation":99,"rootNoteId":0,"typeId":30,"isVariation":true,"shape":"2-1-1-0-1"}],"message":null}
+{
+  "results": [
+    {
+      "id": 101,
+      "key": "101",
+      "strings": [
+        [
+          {
+            "fretNo": 4,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 4,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "isRootNote": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 0,
+      "typeId": 30,
+      "isVariation": true,
+      "shape": "2-2-1-0-1"
+    },
+    {
+      "id": 100,
+      "key": "100",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "isRootNote": true,
+            "symbol": "1"
+          }
+        ]
+      ],
+      "firstFret": 6,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 0,
+      "typeId": 30,
+      "isVariation": true,
+      "shape": "2-1-1-0-1"
+    }
+  ],
+  "message": null
+}

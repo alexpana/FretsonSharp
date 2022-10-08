@@ -9,4 +9,3 @@ namespace Battlehub.RTEditor
         public string Id;
     }
 }
-

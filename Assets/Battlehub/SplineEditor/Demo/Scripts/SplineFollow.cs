@@ -8,79 +8,60 @@ namespace Battlehub.SplineEditor
     [Serializable]
     public class ForkEventArgs
     {
-        private SplineBase[] m_branches;
-        public SplineBase[] Branches
-        {
-            get { return m_branches; }
-        }
-
-        private SplineBase m_spline;
-        public SplineBase Spline
-        {
-            get { return m_spline; }
-        }
-
-        private int m_nextCurveIndex;
-
-        /// <summary>
-        /// -1 if end of the spline reached, otherwise [0, Spline.CurveCount - 1]
-        /// </summary>
-        public int NextCurveIndex
-        {
-            get { return m_nextCurveIndex; }
-        }
-
-
-        /// <summary>
-        /// -1 will force SplineFollow not to choose any branch. (To choose branch set SelectedBranchIndex to [0, Branches.Length - 1])
-        /// </summary>
-        public int SelectBranchIndex
-        {
-            get;
-            set;
-        }
-
         public ForkEventArgs(SplineBase spline, int pointIndex)
         {
-            m_spline = spline;
-            m_nextCurveIndex = pointIndex / 3;  
-            SplineBranch[] branches = spline.GetBranches(pointIndex);
+            Spline = spline;
+            NextCurveIndex = pointIndex / 3;
+            var branches = spline.GetBranches(pointIndex);
             if (branches == null || branches.Length == 0)
             {
-                m_branches = new SplineBase[0];
+                Branches = new SplineBase[0];
             }
             else
             {
-                List<SplineBase> branchList = new List<SplineBase>();
-                for (int i = 0; i < branches.Length; ++i)
+                var branchList = new List<SplineBase>();
+                for (var i = 0; i < branches.Length; ++i)
                 {
-                    SplineBranch branch = branches[i];
-                    if(!branch.Inbound)
-                    {
-                        branchList.Add(spline.BranchToSpline(branch));
-                    }
+                    var branch = branches[i];
+                    if (!branch.Inbound) branchList.Add(spline.BranchToSpline(branch));
                 }
-                m_branches = branchList.ToArray();
+
+                Branches = branchList.ToArray();
             }
 
-            if (m_nextCurveIndex >= spline.CurveCount)
+            if (NextCurveIndex >= spline.CurveCount)
             {
-                if(m_branches.Length > 0)
-                {
-                    SelectBranchIndex = 0;
-                }
+                if (Branches.Length > 0) SelectBranchIndex = 0;
                 SelectBranchIndex = -1;
-                m_nextCurveIndex = -1;
+                NextCurveIndex = -1;
             }
             else
             {
                 SelectBranchIndex = -1;
             }
         }
+
+        public SplineBase[] Branches { get; }
+
+        public SplineBase Spline { get; }
+
+        /// <summary>
+        ///     -1 if end of the spline reached, otherwise [0, Spline.CurveCount - 1]
+        /// </summary>
+        public int NextCurveIndex { get; }
+
+
+        /// <summary>
+        ///     -1 will force SplineFollow not to choose any branch. (To choose branch set SelectedBranchIndex to [0,
+        ///     Branches.Length - 1])
+        /// </summary>
+        public int SelectBranchIndex { get; set; }
     }
 
     [Serializable]
-    public class ForkEvent : UnityEvent<ForkEventArgs> { }
+    public class ForkEvent : UnityEvent<ForkEventArgs>
+    {
+    }
 
     public class SplineFollow : MonoBehaviour
     {
@@ -91,41 +72,35 @@ namespace Battlehub.SplineEditor
         public bool IsLoop = false;
         public ForkEvent Fork;
         public UnityEvent Completed;
+        private int m_curveIndex;
+        private bool m_isCompleted;
+        private bool m_isRunning;
 
         private SplineBase m_spline;
-        private bool m_isRunning;
-        private bool m_isCompleted;
 
         private float m_t;
-        private int m_curveIndex;
 
         private void Start()
         {
-            if(!Spline)
+            if (!Spline)
             {
                 Debug.LogError("Set Spline Field!");
                 enabled = false;
                 return;
             }
+
             m_isCompleted = true;
         }
 
         private void Update()
         {
-            if(IsRunning != m_isRunning)
+            if (IsRunning != m_isRunning)
             {
-                if(m_isCompleted)
-                {
-                    Restart();
-                }
+                if (m_isCompleted) Restart();
                 m_isRunning = IsRunning;
             }
 
-            if(IsRunning)
-            {
-                Move();
-            }
-            
+            if (IsRunning) Move();
         }
 
         private void Restart()
@@ -139,40 +114,38 @@ namespace Battlehub.SplineEditor
 
         private void Move()
         {
-            int curveIndex = m_spline.ToCurveIndex(m_t);
-            if (m_curveIndex != curveIndex || m_t >= 1.0f)
-            {
-                CheckBranches(curveIndex);
-            }
+            var curveIndex = m_spline.ToCurveIndex(m_t);
+            if (m_curveIndex != curveIndex || m_t >= 1.0f) CheckBranches(curveIndex);
 
-            float t = m_t;
+            var t = m_t;
             UpdatePosition(t);
 
-            float v = m_spline.GetVelocity(t).magnitude;
+            var v = m_spline.GetVelocity(t).magnitude;
             v *= m_spline.CurveCount;
             if (m_t >= 1.0f)
             {
                 if (m_spline.NextSpline != null)
                 {
-                    int nextControlPointIndex = m_spline.NextControlPointIndex;
+                    var nextControlPointIndex = m_spline.NextControlPointIndex;
                     m_curveIndex = nextControlPointIndex / 3;
                     m_spline = m_spline.NextSpline;
 
-                    if(m_spline.NextControlPointIndex > 0)
+                    if (m_spline.NextControlPointIndex > 0)
                     {
-                        m_t = ((float)m_curveIndex) / m_spline.CurveCount;
+                        m_t = (float)m_curveIndex / m_spline.CurveCount;
                         m_curveIndex++;
                     }
                     else
                     {
-                        m_t = ((float)m_curveIndex) / m_spline.CurveCount;
+                        m_t = (float)m_curveIndex / m_spline.CurveCount;
                     }
+
                     Debug.Log("Next Spline " + m_curveIndex);
-                    CheckBranches(m_curveIndex);    
+                    CheckBranches(m_curveIndex);
                 }
                 else
                 {
-                    m_t = (m_t - 1.0f) + (Time.deltaTime * Speed) / v;
+                    m_t = m_t - 1.0f + Time.deltaTime * Speed / v;
                     if (!m_spline.Loop && !IsLoop)
                     {
                         m_t = 1.0f;
@@ -183,31 +156,24 @@ namespace Battlehub.SplineEditor
                     }
 
                     if (IsLoop)
-                    {
                         if (m_spline != Spline)
-                        {
                             Restart();
-                        }
-                    }
                 }
             }
             else
             {
-                m_t += (Time.deltaTime * Speed) / v;
+                m_t += Time.deltaTime * Speed / v;
             }
         }
 
         private void CheckBranches(int curveIndex)
         {
-            int pointIndex = curveIndex * 3;
-            if (m_t >= 1.0f)
-            {
-                pointIndex += 3;
-            }
+            var pointIndex = curveIndex * 3;
+            if (m_t >= 1.0f) pointIndex += 3;
             m_curveIndex = curveIndex;
             if (m_spline.HasBranches(pointIndex))
             {
-                ForkEventArgs args = new ForkEventArgs(m_spline, pointIndex);
+                var args = new ForkEventArgs(m_spline, pointIndex);
                 Fork.Invoke(args);
                 if (args.SelectBranchIndex > -1 && args.SelectBranchIndex < args.Branches.Length)
                 {
@@ -222,9 +188,9 @@ namespace Battlehub.SplineEditor
 
         private void UpdatePosition(float t)
         {
-            Vector3 position = m_spline.GetPoint(t);
-            Vector3 dir = m_spline.GetDirection(t);
-            float twist = m_spline.GetTwist(t);
+            var position = m_spline.GetPoint(t);
+            var dir = m_spline.GetDirection(t);
+            var twist = m_spline.GetTwist(t);
 
             transform.position = position;
             transform.LookAt(position + dir);
@@ -275,5 +241,4 @@ namespace Battlehub.SplineEditor
     //    }
 
     //}
-
 }

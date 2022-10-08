@@ -1,22 +1,22 @@
-﻿using UnityEditor;
-using UnityEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEditor;
+using UnityEngine;
+using Object = UnityEngine.Object;
+
 namespace Battlehub.Utils
 {
     public static class ExposeProperties
     {
         public static void Expose(PropertyField[] properties)
         {
-
-            GUILayoutOption[] emptyOptions = new GUILayoutOption[0];
+            var emptyOptions = new GUILayoutOption[0];
 
             EditorGUILayout.BeginVertical(emptyOptions);
 
-            foreach (PropertyField field in properties)
+            foreach (var field in properties)
             {
-
                 EditorGUILayout.BeginHorizontal(emptyOptions);
 
                 switch (field.Type)
@@ -34,17 +34,18 @@ namespace Battlehub.Utils
                         break;
 
                     case SerializedPropertyType.String:
-                        field.SetValue(EditorGUILayout.TextField(field.Name, (String)field.GetValue(), emptyOptions));
+                        field.SetValue(EditorGUILayout.TextField(field.Name, (string)field.GetValue(), emptyOptions));
                         break;
 
                     case SerializedPropertyType.Vector2:
-                        field.SetValue(EditorGUILayout.Vector2Field(field.Name, (Vector2)field.GetValue(), emptyOptions));
+                        field.SetValue(
+                            EditorGUILayout.Vector2Field(field.Name, (Vector2)field.GetValue(), emptyOptions));
                         break;
 
                     case SerializedPropertyType.Vector3:
-                        field.SetValue(EditorGUILayout.Vector3Field(field.Name, (Vector3)field.GetValue(), emptyOptions));
+                        field.SetValue(
+                            EditorGUILayout.Vector3Field(field.Name, (Vector3)field.GetValue(), emptyOptions));
                         break;
-
 
 
                     case SerializedPropertyType.Enum:
@@ -52,113 +53,85 @@ namespace Battlehub.Utils
                         break;
 
                     case SerializedPropertyType.ObjectReference:
-                        field.SetValue(EditorGUILayout.ObjectField(field.Name, (UnityEngine.Object)field.GetValue(), field.GetPropertyType(), true, emptyOptions));
+                        field.SetValue(EditorGUILayout.ObjectField(field.Name, (Object)field.GetValue(),
+                            field.GetPropertyType(), true, emptyOptions));
                         break;
-
-                    default:
-
-                        break;
-
                 }
 
                 EditorGUILayout.EndHorizontal();
-
             }
 
             EditorGUILayout.EndVertical();
-
         }
 
-        public static PropertyField[] GetProperties(System.Object obj)
+        public static PropertyField[] GetProperties(object obj)
         {
+            var fields = new List<PropertyField>();
 
-            List<PropertyField> fields = new List<PropertyField>();
+            var infos = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            PropertyInfo[] infos = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            foreach (PropertyInfo info in infos)
+            foreach (var info in infos)
             {
-
                 if (!(info.CanRead && info.CanWrite))
                     continue;
 
-                object[] attributes = info.GetCustomAttributes(true);
+                var attributes = info.GetCustomAttributes(true);
 
-                bool isExposed = false;
+                var isExposed = false;
 
-                foreach (object o in attributes)
-                {
+                foreach (var o in attributes)
                     if (o.GetType() == typeof(ExposePropertyAttribute))
                     {
                         isExposed = true;
                         break;
                     }
-                }
 
                 if (!isExposed)
                     continue;
 
-                SerializedPropertyType type = SerializedPropertyType.Integer;
+                var type = SerializedPropertyType.Integer;
 
                 if (PropertyField.GetPropertyType(info, out type))
                 {
-                    PropertyField field = new PropertyField(obj, info, type);
+                    var field = new PropertyField(obj, info, type);
                     fields.Add(field);
                 }
-
             }
 
             return fields.ToArray();
-
         }
-
     }
 
 
     public class PropertyField
     {
-        System.Object m_Instance;
-        PropertyInfo m_Info;
-        SerializedPropertyType m_Type;
+        private readonly MethodInfo m_Getter;
+        private readonly PropertyInfo m_Info;
+        private readonly object m_Instance;
+        private readonly MethodInfo m_Setter;
 
-        MethodInfo m_Getter;
-        MethodInfo m_Setter;
-
-        public SerializedPropertyType Type
+        public PropertyField(object instance, PropertyInfo info, SerializedPropertyType type)
         {
-            get
-            {
-                return m_Type;
-            }
-        }
-
-        public String Name
-        {
-            get
-            {
-                return ObjectNames.NicifyVariableName(m_Info.Name);
-            }
-        }
-
-        public PropertyField(System.Object instance, PropertyInfo info, SerializedPropertyType type)
-        {
-
             m_Instance = instance;
             m_Info = info;
-            m_Type = type;
+            Type = type;
 
             m_Getter = m_Info.GetGetMethod();
             m_Setter = m_Info.GetSetMethod();
         }
 
-        public System.Object GetValue()
+        public SerializedPropertyType Type { get; }
+
+        public string Name => ObjectNames.NicifyVariableName(m_Info.Name);
+
+        public object GetValue()
         {
             return m_Getter.Invoke(m_Instance, null);
         }
 
-        public void SetValue(System.Object value)
+        public void SetValue(object value)
         {
-            m_Setter.Invoke(m_Instance, new System.Object[] { value });
+            m_Setter.Invoke(m_Instance, new[] { value });
         }
 
         public Type GetPropertyType()
@@ -168,10 +141,9 @@ namespace Battlehub.Utils
 
         public static bool GetPropertyType(PropertyInfo info, out SerializedPropertyType propertyType)
         {
-
             propertyType = SerializedPropertyType.Generic;
 
-            Type type = info.PropertyType;
+            var type = info.PropertyType;
 
             if (type == typeof(int))
             {
@@ -214,14 +186,12 @@ namespace Battlehub.Utils
                 propertyType = SerializedPropertyType.Enum;
                 return true;
             }
+
             // COMMENT OUT to NOT expose custom objects/types
             propertyType = SerializedPropertyType.ObjectReference;
             return true;
 
             //return false;
-
         }
-
     }
-
 }

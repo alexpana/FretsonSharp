@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MinMaxSliderAttribute : PropertyAttribute
 {
-    public float Min;
     public float Max;
+    public float Min;
 
     public MinMaxSliderAttribute(float min, float max)
     {

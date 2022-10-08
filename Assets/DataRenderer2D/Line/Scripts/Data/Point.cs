@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using System;
 
 namespace geniikw.DataRenderer2D
 {
     /// <summary>
-    /// define each point
+    ///     define each point
     /// </summary>
     [Serializable]
     public struct Point
@@ -14,8 +12,8 @@ namespace geniikw.DataRenderer2D
         public Vector3 position;
         public Vector3 previousControlOffset;
         public Vector3 nextControlOffset;
-        [Range(0,100)]
-        public float width;
+
+        [Range(0, 100)] public float width;
         //todo : move normalVector from LineOption to Point.
         //public float normal;
 
@@ -27,28 +25,11 @@ namespace geniikw.DataRenderer2D
 
             this.width = width;
         }
-        
-        public Vector3 PreviousControlPoisition
-        {
-            get
-            {
-                return previousControlOffset + position;
-            }
-        }
-        public Vector3 NextControlPosition
-        {
-            get
-            {
-                return nextControlOffset + position;
-            }
-        }
 
-        public static Point Zero
-        {
-            get
-            {
-                return new Point(Vector3.zero, Vector3.zero, Vector3.zero);
-            }
-        }
+        public Vector3 PreviousControlPoisition => previousControlOffset + position;
+
+        public Vector3 NextControlPosition => nextControlOffset + position;
+
+        public static Point Zero => new Point(Vector3.zero, Vector3.zero, Vector3.zero);
     }
 }

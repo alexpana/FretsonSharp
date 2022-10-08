@@ -1,23 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace geniikw.DataRenderer2D
 {
     /// <summary>
-    /// converter (Line -> MeshData)
+    ///     converter (Line -> MeshData)
     /// </summary>
-    /// 
-   
     public class LineBuilder : IMeshDrawer
     {
-        readonly IBezierBuilder _bezierDrawer;
-        readonly IJointBuilder _jointDrawer;
-        readonly IJointBuilder _jointIntersectDrawer;
-        readonly ICapBuilder _capDrawer;
-        readonly ISpline _line;
+        private readonly IBezierBuilder _bezierDrawer;
+        private readonly ICapBuilder _capDrawer;
+        private readonly IJointBuilder _jointDrawer;
+        private readonly IJointBuilder _jointIntersectDrawer;
+        private readonly ISpline _line;
 
-        public LineBuilder(IBezierBuilder b, IJointBuilder j,IJointBuilder js, ICapBuilder c, ISpline line){
+        public LineBuilder(IBezierBuilder b, IJointBuilder j, IJointBuilder js, ICapBuilder c, ISpline line)
+        {
             _bezierDrawer = b;
             _jointDrawer = j;
             _capDrawer = c;
@@ -29,49 +27,37 @@ namespace geniikw.DataRenderer2D
         {
             if (_line.Line.option.endRatio - _line.Line.option.startRatio <= 0)
                 yield break;
-            
+
             //todo : merge Pairlist with TripleList to one iteration.
             var ff = true;
-            Spline.LinePair last = new Spline.LinePair();
-            foreach(var pair in _line.Line.TargetPairList)
+            var last = new Spline.LinePair();
+            foreach (var pair in _line.Line.TargetPairList)
             {
                 if (ff)
                 {
                     ff = false;
-                    if (_line.Line.option.mode == LineOption.Mode.RoundEdge)// && pairList.Count() > 0)
-                    {
+                    if (_line.Line.option.mode == LineOption.Mode.RoundEdge) // && pairList.Count() > 0)
                         foreach (var mesh in _capDrawer.Build(pair, false))
-                        {
                             yield return mesh;
-                        }
-                    }
                 }
 
-                
-                foreach (var mesh in _bezierDrawer.Build(pair))
-                {
-                    yield return mesh;
-                }
+
+                foreach (var mesh in _bezierDrawer.Build(pair)) yield return mesh;
                 last = pair;
             }
 
             foreach (var triple in _line.Line.TripleList)
             {
-                var joint = _line.Line.option.jointOption == LineOption.LineJointOption.round ? _jointDrawer : _jointIntersectDrawer;
+                var joint = _line.Line.option.jointOption == LineOption.LineJointOption.round
+                    ? _jointDrawer
+                    : _jointIntersectDrawer;
 
-                foreach (var mesh in joint.Build(triple))
-                {
-                    yield return mesh;
-                }
+                foreach (var mesh in joint.Build(triple)) yield return mesh;
             }
 
-            if(_line.Line.option.mode == LineOption.Mode.RoundEdge)
-            {
+            if (_line.Line.option.mode == LineOption.Mode.RoundEdge)
                 foreach (var mesh in _capDrawer.Build(last, true))
-                {
                     yield return mesh;
-                }
-            }
         }
 
         public class Factory
@@ -86,10 +72,9 @@ namespace geniikw.DataRenderer2D
                     new RoundCapDrawer(line),
                     line
                 );
- 
+
                 return builder;
             }
         }
-
     }
 }

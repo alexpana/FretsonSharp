@@ -1,1 +1,164 @@
-{"results":[{"id":2330,"key":"2330","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":3,"symbol":"1"}],[{"fretNo":5,"symbol":"3"}],[{"fretNo":5,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":6,"isRootNote":true,"symbol":"4"}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":10,"typeId":18,"isVariation":true,"shape":"1-3-3-0-4"},{"id":2328,"key":"2328","strings":[[{"fretNo":6,"isRootNote":true,"symbol":"4"}],[{"fretNo":6,"symbol":"3"}],[{"fretNo":5,"barre":2,"symbol":"1"}],[{"fretNo":5,"barre":true,"symbol":"1"}],[{"fretNo":5,"barre":true,"symbol":"1"}],[{"fretNo":6,"isRootNote":true,"symbol":"2"}]],"firstFret":3,"variation":2,"realVariation":99,"rootNoteId":10,"typeId":18,"isVariation":true,"shape":"2-2-1-1-1-2"},{"id":2329,"key":"2329","strings":[[{"fretNo":13,"symbol":"4"}],[{"fretNo":13,"symbol":"3"}],[{"fretNo":12,"barre":1,"symbol":"1"}],[{"fretNo":12,"barre":true,"symbol":"1"}],[{"fretNo":13,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":10,"variation":3,"realVariation":99,"rootNoteId":10,"typeId":18,"isVariation":true,"shape":"2-2-1-1-2"}],"message":null}
+{
+  "results": [
+    {
+      "id": 2330,
+      "key": "2330",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "isRootNote": true,
+            "symbol": "4"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 10,
+      "typeId": 18,
+      "isVariation": true,
+      "shape": "1-3-3-0-4"
+    },
+    {
+      "id": 2328,
+      "key": "2328",
+      "strings": [
+        [
+          {
+            "fretNo": 6,
+            "isRootNote": true,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "barre": 2,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ]
+      ],
+      "firstFret": 3,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 10,
+      "typeId": 18,
+      "isVariation": true,
+      "shape": "2-2-1-1-1-2"
+    },
+    {
+      "id": 2329,
+      "key": "2329",
+      "strings": [
+        [
+          {
+            "fretNo": 13,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 12,
+            "barre": 1,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 12,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 10,
+      "typeId": 18,
+      "isVariation": true,
+      "shape": "2-2-1-1-2"
+    }
+  ],
+  "message": null
+}

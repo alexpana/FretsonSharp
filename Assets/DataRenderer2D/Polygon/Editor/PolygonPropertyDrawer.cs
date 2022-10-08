@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
 
 namespace geniikw.DataRenderer2D.Polygon.Editors
 {
@@ -50,10 +48,9 @@ namespace geniikw.DataRenderer2D.Polygon.Editors
                 EditorGUI.PropertyField(position, property.FindPropertyRelative("endAngle"));
                 position.y += EditorGUIUtility.singleLineHeight;
                 EditorGUI.PropertyField(position, property.FindPropertyRelative("innerRatio"));
-            
             }
-           
-            if(type >= PolygonType.HoleCenterColor)
+
+            if (type >= PolygonType.HoleCenterColor)
             {
                 position.y += EditorGUIUtility.singleLineHeight;
                 EditorGUI.PropertyField(position, property.FindPropertyRelative("centerColor"));

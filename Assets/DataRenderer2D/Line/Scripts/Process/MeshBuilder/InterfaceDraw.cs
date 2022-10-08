@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
-namespace geniikw.DataRenderer2D {
-    
+namespace geniikw.DataRenderer2D
+{
     public interface IJointBuilder
     {
         IEnumerable<IMesh> Build(Spline.Triple triple);
@@ -18,6 +16,4 @@ namespace geniikw.DataRenderer2D {
     {
         IEnumerable<IMesh> Build(Spline.LinePair pair, bool isEnd);
     }
-   
-   
 }

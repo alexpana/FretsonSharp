@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
+
 namespace Battlehub.SplineEditor
 {
     [CustomEditor(typeof(MapGen))]
@@ -11,10 +12,9 @@ namespace Battlehub.SplineEditor
 
             if (GUILayout.Button("Generate"))
             {
-                MapGen gen = (MapGen)target;
+                var gen = (MapGen)target;
                 gen.Generate();
             }
         }
     }
 }
-

@@ -1,1 +1,163 @@
-{"results":[{"id":1784,"key":"1784","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":1,"barre":1,"symbol":"1"}],[{"fretNo":1,"barre":true,"symbol":"1"}],[{"fretNo":3,"symbol":"4"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":3,"isRootNote":true,"symbol":"3"}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":7,"typeId":47,"isVariation":true,"shape":"1-1-3-0-3"},{"id":1786,"key":"1786","strings":[[{"fretNo":4,"symbol":"1"}],[{"fretNo":6,"symbol":"4"}],[{"fretNo":5,"symbol":"3"}],[{"fretNo":5,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":3,"variation":2,"realVariation":99,"rootNoteId":7,"typeId":47,"isVariation":true,"shape":"1-3-2-2"},{"id":1785,"key":"1785","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":9,"symbol":"1"}],[{"fretNo":10,"symbol":"4"}],[{"fretNo":10,"symbol":"3"}],[{"fretNo":10,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":7,"variation":3,"realVariation":99,"rootNoteId":7,"typeId":47,"isVariation":true,"shape":"1-2-2-2"}],"message":null}
+{
+  "results": [
+    {
+      "id": 1784,
+      "key": "1784",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": 1,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "isRootNote": true,
+            "symbol": "3"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 7,
+      "typeId": 47,
+      "isVariation": true,
+      "shape": "1-1-3-0-3"
+    },
+    {
+      "id": 1786,
+      "key": "1786",
+      "strings": [
+        [
+          {
+            "fretNo": 4,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 3,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 7,
+      "typeId": 47,
+      "isVariation": true,
+      "shape": "1-3-2-2"
+    },
+    {
+      "id": 1785,
+      "key": "1785",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 7,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 7,
+      "typeId": 47,
+      "isVariation": true,
+      "shape": "1-2-2-2"
+    }
+  ],
+  "message": null
+}

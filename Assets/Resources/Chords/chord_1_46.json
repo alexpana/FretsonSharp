@@ -1,1 +1,162 @@
-{"results":[{"id":381,"key":"381","strings":[[{"fretNo":6,"symbol":"4"}],[{"fretNo":3,"barre":2,"symbol":"1"}],[{"fretNo":4,"symbol":"3"}],[{"fretNo":3,"barre":true,"symbol":"1"}],[{"fretNo":4,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":1,"typeId":46,"isVariation":true,"shape":"4-1-2-1-2"},{"id":382,"key":"382","strings":[[{"fretNo":6,"barre":1,"symbol":"1"}],[{"fretNo":6,"barre":true,"symbol":"1"}],[{"fretNo":7,"symbol":"2"}],[{"fretNo":9,"symbol":"4"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":9,"isRootNote":true,"symbol":"3"}]],"firstFret":5,"variation":2,"realVariation":99,"rootNoteId":1,"typeId":46,"isVariation":true,"shape":"1-1-2-4-0-4"},{"id":380,"key":"380","strings":[[{"fretNo":10,"symbol":"3"}],[{"fretNo":11,"symbol":"4"}],[{"fretNo":10,"symbol":"2"}],[{"fretNo":9,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":9,"isRootNote":true,"symbol":"T"}]],"firstFret":8,"variation":3,"realVariation":99,"rootNoteId":1,"typeId":46,"isVariation":true,"shape":"2-3-2-1-0-1"}],"message":null}
+{
+  "results": [
+    {
+      "id": 381,
+      "key": "381",
+      "strings": [
+        [
+          {
+            "fretNo": 6,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "barre": 2,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 4,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 4,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 1,
+      "typeId": 46,
+      "isVariation": true,
+      "shape": "4-1-2-1-2"
+    },
+    {
+      "id": 382,
+      "key": "382",
+      "strings": [
+        [
+          {
+            "fretNo": 6,
+            "barre": 1,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 7,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "isRootNote": true,
+            "symbol": "3"
+          }
+        ]
+      ],
+      "firstFret": 5,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 1,
+      "typeId": 46,
+      "isVariation": true,
+      "shape": "1-1-2-4-0-4"
+    },
+    {
+      "id": 380,
+      "key": "380",
+      "strings": [
+        [
+          {
+            "fretNo": 10,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 11,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "isRootNote": true,
+            "symbol": "T"
+          }
+        ]
+      ],
+      "firstFret": 8,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 1,
+      "typeId": 46,
+      "isVariation": true,
+      "shape": "2-3-2-1-0-1"
+    }
+  ],
+  "message": null
+}

@@ -1,1 +1,547 @@
-{"results":[{"id":1860,"key":"1860","strings":[[{"fretNo":1,"barre":5,"symbol":"1"}],[{"fretNo":1,"barre":true,"symbol":"1"}],[{"fretNo":1,"isRootNote":true,"barre":true,"symbol":"1"}],[{"fretNo":1,"barre":true,"symbol":"1"}],[{"fretNo":3,"symbol":"3"}],[{"fretNo":1,"barre":true,"symbol":"1"}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":8,"typeId":31,"isVariation":true,"shape":"1-1-1-1-3-1"},{"id":1858,"key":"1858","strings":[[{"fretNo":1,"barre":3,"symbol":"1"}],[{"fretNo":1,"barre":true,"symbol":"1"}],[{"fretNo":1,"isRootNote":true,"barre":true,"symbol":"1"}],[{"fretNo":1,"barre":true,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":1,"variation":2,"realVariation":99,"rootNoteId":8,"typeId":31,"isVariation":true,"shape":"1-1-1-1"},{"id":1864,"key":"1864","strings":[[{"fretNo":4,"isRootNote":true,"symbol":"3"}],[{"fretNo":4,"symbol":"2"}],[{"fretNo":5,"symbol":"4"}],[{"fretNo":3,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":1,"variation":3,"realVariation":99,"rootNoteId":8,"typeId":31,"isVariation":true,"shape":"2-2-3-1"},{"id":1856,"key":"1856","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":4,"symbol":"3"}],[{"fretNo":5,"symbol":"4"}],[{"fretNo":3,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":4,"isRootNote":true,"symbol":"2"}]],"firstFret":1,"variation":4,"realVariation":99,"rootNoteId":8,"typeId":31,"isVariation":true,"shape":"2-3-1-0-2"},{"id":1862,"key":"1862","strings":[[{"fretNo":8,"symbol":"4"}],[{"fretNo":6,"barre":2,"symbol":"1"}],[{"fretNo":8,"symbol":"3"}],[{"fretNo":6,"isRootNote":true,"barre":true,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":5,"variation":5,"realVariation":99,"rootNoteId":8,"typeId":31,"isVariation":true,"shape":"3-1-3-1"},{"id":1855,"key":"1855","strings":[[{"fretNo":8,"barre":5,"symbol":"1"}],[{"fretNo":9,"isRootNote":true,"symbol":"2"}],[{"fretNo":8,"barre":true,"symbol":"1"}],[{"fretNo":10,"symbol":"3"}],[{"fretNo":8,"barre":true,"symbol":"1"}],[{"fretNo":8,"barre":true,"symbol":"1"}]],"firstFret":7,"variation":6,"realVariation":99,"rootNoteId":8,"typeId":31,"isVariation":true,"shape":"1-2-1-3-1-1"},{"id":1863,"key":"1863","strings":[[{"fretNo":11,"symbol":"4"}],[{"fretNo":9,"isRootNote":true,"symbol":"1"}],[{"fretNo":10,"symbol":"3"}],[{"fretNo":10,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":8,"variation":7,"realVariation":99,"rootNoteId":8,"typeId":31,"isVariation":true,"shape":"3-1-2-2"},{"id":1857,"key":"1857","strings":[[{"fretNo":13,"barre":3,"symbol":"3"}],[{"fretNo":13,"barre":true,"symbol":"3"}],[{"fretNo":13,"isRootNote":true,"barre":true,"symbol":"3"}],[{"fretNo":13,"barre":true,"symbol":"3"}],[{"fretNo":11,"isRootNote":true,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":10,"variation":8,"realVariation":99,"rootNoteId":8,"typeId":31,"isVariation":true,"shape":"3-3-3-3-1"},{"id":1859,"key":"1859","strings":[[{"fretNo":13,"barre":3,"symbol":"1"}],[{"fretNo":13,"barre":true,"symbol":"1"}],[{"fretNo":13,"isRootNote":true,"barre":true,"symbol":"1"}],[{"fretNo":13,"barre":true,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":10,"variation":9,"realVariation":99,"rootNoteId":8,"typeId":31,"isVariation":true,"shape":"1-1-1-1"},{"id":1861,"key":"1861","strings":[[{"fretNo":13,"barre":5,"symbol":"1"}],[{"fretNo":13,"barre":true,"symbol":"1"}],[{"fretNo":13,"isRootNote":true,"barre":true,"symbol":"1"}],[{"fretNo":13,"barre":true,"symbol":"1"}],[{"fretNo":15,"symbol":"3"}],[{"fretNo":13,"barre":true,"symbol":"1"}]],"firstFret":10,"variation":10,"realVariation":99,"rootNoteId":8,"typeId":31,"isVariation":true,"shape":"1-1-1-1-3-1"}],"message":null}
+{
+  "results": [
+    {
+      "id": 1860,
+      "key": "1860",
+      "strings": [
+        [
+          {
+            "fretNo": 1,
+            "barre": 5,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "isRootNote": true,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": true,
+            "symbol": "1"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 8,
+      "typeId": 31,
+      "isVariation": true,
+      "shape": "1-1-1-1-3-1"
+    },
+    {
+      "id": 1858,
+      "key": "1858",
+      "strings": [
+        [
+          {
+            "fretNo": 1,
+            "barre": 3,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "isRootNote": true,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 8,
+      "typeId": 31,
+      "isVariation": true,
+      "shape": "1-1-1-1"
+    },
+    {
+      "id": 1864,
+      "key": "1864",
+      "strings": [
+        [
+          {
+            "fretNo": 4,
+            "isRootNote": true,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 4,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 8,
+      "typeId": 31,
+      "isVariation": true,
+      "shape": "2-2-3-1"
+    },
+    {
+      "id": 1856,
+      "key": "1856",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 4,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 4,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 4,
+      "realVariation": 99,
+      "rootNoteId": 8,
+      "typeId": 31,
+      "isVariation": true,
+      "shape": "2-3-1-0-2"
+    },
+    {
+      "id": 1862,
+      "key": "1862",
+      "strings": [
+        [
+          {
+            "fretNo": 8,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "barre": 2,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "isRootNote": true,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 5,
+      "variation": 5,
+      "realVariation": 99,
+      "rootNoteId": 8,
+      "typeId": 31,
+      "isVariation": true,
+      "shape": "3-1-3-1"
+    },
+    {
+      "id": 1855,
+      "key": "1855",
+      "strings": [
+        [
+          {
+            "fretNo": 8,
+            "barre": 5,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "barre": true,
+            "symbol": "1"
+          }
+        ]
+      ],
+      "firstFret": 7,
+      "variation": 6,
+      "realVariation": 99,
+      "rootNoteId": 8,
+      "typeId": 31,
+      "isVariation": true,
+      "shape": "1-2-1-3-1-1"
+    },
+    {
+      "id": 1863,
+      "key": "1863",
+      "strings": [
+        [
+          {
+            "fretNo": 11,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "isRootNote": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 8,
+      "variation": 7,
+      "realVariation": 99,
+      "rootNoteId": 8,
+      "typeId": 31,
+      "isVariation": true,
+      "shape": "3-1-2-2"
+    },
+    {
+      "id": 1857,
+      "key": "1857",
+      "strings": [
+        [
+          {
+            "fretNo": 13,
+            "barre": 3,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "isRootNote": true,
+            "barre": true,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 11,
+            "isRootNote": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 8,
+      "realVariation": 99,
+      "rootNoteId": 8,
+      "typeId": 31,
+      "isVariation": true,
+      "shape": "3-3-3-3-1"
+    },
+    {
+      "id": 1859,
+      "key": "1859",
+      "strings": [
+        [
+          {
+            "fretNo": 13,
+            "barre": 3,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "isRootNote": true,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 9,
+      "realVariation": 99,
+      "rootNoteId": 8,
+      "typeId": 31,
+      "isVariation": true,
+      "shape": "1-1-1-1"
+    },
+    {
+      "id": 1861,
+      "key": "1861",
+      "strings": [
+        [
+          {
+            "fretNo": 13,
+            "barre": 5,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "isRootNote": true,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 15,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "1"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 10,
+      "realVariation": 99,
+      "rootNoteId": 8,
+      "typeId": 31,
+      "isVariation": true,
+      "shape": "1-1-1-1-3-1"
+    }
+  ],
+  "message": null
+}

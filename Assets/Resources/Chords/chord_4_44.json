@@ -1,1 +1,161 @@
-{"results":[{"id":1067,"key":"1067","strings":[[{"fretNo":2,"symbol":"4"}],[{"fretNo":1,"symbol":"2"}],[{"fretNo":1,"symbol":"1"}],[{"fretNo":0,"symbol":null}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isRootNote":true,"symbol":null}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":4,"typeId":44,"isVariation":true,"shape":"2-1-1"},{"id":1069,"key":"1069","strings":[[{"fretNo":8,"symbol":"4"}],[{"fretNo":7,"barre":1,"symbol":"3"}],[{"fretNo":7,"barre":true,"symbol":"3"}],[{"fretNo":6,"symbol":"1"}],[{"fretNo":7,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isRootNote":true,"isMuted":true,"symbol":"X"}]],"firstFret":5,"variation":2,"realVariation":99,"rootNoteId":4,"typeId":44,"isVariation":true,"shape":"3-2-2-1-2"},{"id":1068,"key":"1068","strings":[[{"fretNo":14,"symbol":"4"}],[{"fretNo":13,"symbol":"3"}],[{"fretNo":13,"symbol":"2"}],[{"fretNo":12,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":12,"isRootNote":true,"symbol":"T"}]],"firstFret":10,"variation":3,"realVariation":99,"rootNoteId":4,"typeId":44,"isVariation":true,"shape":"3-2-2-1-0-1"}],"message":null}
+{
+  "results": [
+    {
+      "id": 1067,
+      "key": "1067",
+      "strings": [
+        [
+          {
+            "fretNo": 2,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "symbol": null
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isRootNote": true,
+            "symbol": null
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 4,
+      "typeId": 44,
+      "isVariation": true,
+      "shape": "2-1-1"
+    },
+    {
+      "id": 1069,
+      "key": "1069",
+      "strings": [
+        [
+          {
+            "fretNo": 8,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 7,
+            "barre": 1,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 7,
+            "barre": true,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 7,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isRootNote": true,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 5,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 4,
+      "typeId": 44,
+      "isVariation": true,
+      "shape": "3-2-2-1-2"
+    },
+    {
+      "id": 1068,
+      "key": "1068",
+      "strings": [
+        [
+          {
+            "fretNo": 14,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 12,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 12,
+            "isRootNote": true,
+            "symbol": "T"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 4,
+      "typeId": 44,
+      "isVariation": true,
+      "shape": "3-2-2-1-0-1"
+    }
+  ],
+  "message": null
+}

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,14 +20,14 @@ namespace geniikw.DataRenderer2D.Example
         {
             var image = owner.GetComponent<Image>();
             if (image == null)
-                return null ;
+                return null;
             return owner.StartCoroutine(ImageColorTween(image, end, t));
         }
 
-        static IEnumerator ScalerRoutine(Transform owner, Vector3 end, float time)
+        private static IEnumerator ScalerRoutine(Transform owner, Vector3 end, float time)
         {
-            float t = 0f;
-            Vector3 start = owner.localScale;
+            var t = 0f;
+            var start = owner.localScale;
             while (t < 1f)
             {
                 t += Time.deltaTime / time;
@@ -37,10 +36,10 @@ namespace geniikw.DataRenderer2D.Example
             }
         }
 
-        static IEnumerator MoveRoutine(Transform owner, Vector3 end, float time)
+        private static IEnumerator MoveRoutine(Transform owner, Vector3 end, float time)
         {
-            float t = 0f;
-            Vector3 start = owner.position;
+            var t = 0f;
+            var start = owner.position;
             while (t < 1f)
             {
                 t += Time.deltaTime / time;
@@ -49,9 +48,9 @@ namespace geniikw.DataRenderer2D.Example
             }
         }
 
-        static IEnumerator ImageColorTween(Image target, Color end, float time)
+        private static IEnumerator ImageColorTween(Image target, Color end, float time)
         {
-            float t = 0f;
+            var t = 0f;
             var start = target.color;
             while (t < 1f)
             {
@@ -60,8 +59,5 @@ namespace geniikw.DataRenderer2D.Example
                 yield return null;
             }
         }
-
-
-
     }
 }

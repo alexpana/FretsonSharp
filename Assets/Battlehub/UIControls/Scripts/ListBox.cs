@@ -1,10 +1,6 @@
-﻿using UnityEngine;
-
-namespace Battlehub.UIControls
+﻿namespace Battlehub.UIControls
 {
     public class ListBox : ItemsControl
     {
-       
     }
 }
-

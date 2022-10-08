@@ -1,1 +1,163 @@
-{"results":[{"id":1552,"key":"1552","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":1,"symbol":"1"}],[{"fretNo":0,"symbol":null}],[{"fretNo":2,"symbol":"3"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":2,"isRootNote":true,"symbol":"2"}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":6,"typeId":39,"isVariation":true,"shape":"1-0-2-0-2"},{"id":1554,"key":"1554","strings":[[{"fretNo":8,"barre":3,"symbol":"1"}],[{"fretNo":8,"barre":true,"symbol":"1"}],[{"fretNo":9,"symbol":"3"}],[{"fretNo":8,"barre":true,"symbol":"1"}],[{"fretNo":9,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":6,"variation":2,"realVariation":99,"rootNoteId":6,"typeId":39,"isVariation":true,"shape":"1-1-2-1-2"},{"id":1553,"key":"1553","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":13,"symbol":"2"}],[{"fretNo":12,"symbol":"1"}],[{"fretNo":14,"symbol":"4"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":14,"isRootNote":true,"symbol":"3"}]],"firstFret":10,"variation":3,"realVariation":99,"rootNoteId":6,"typeId":39,"isVariation":true,"shape":"2-1-3-0-3"}],"message":null}
+{
+  "results": [
+    {
+      "id": 1552,
+      "key": "1552",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "symbol": null
+          }
+        ],
+        [
+          {
+            "fretNo": 2,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 2,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 6,
+      "typeId": 39,
+      "isVariation": true,
+      "shape": "1-0-2-0-2"
+    },
+    {
+      "id": 1554,
+      "key": "1554",
+      "strings": [
+        [
+          {
+            "fretNo": 8,
+            "barre": 3,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 6,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 6,
+      "typeId": 39,
+      "isVariation": true,
+      "shape": "1-1-2-1-2"
+    },
+    {
+      "id": 1553,
+      "key": "1553",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 12,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 14,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 14,
+            "isRootNote": true,
+            "symbol": "3"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 6,
+      "typeId": 39,
+      "isVariation": true,
+      "shape": "2-1-3-0-3"
+    }
+  ],
+  "message": null
+}

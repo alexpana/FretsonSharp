@@ -1,1 +1,163 @@
-{"results":[{"id":609,"key":"609","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":4,"symbol":"1"}],[{"fretNo":5,"symbol":"4"}],[{"fretNo":5,"symbol":"3"}],[{"fretNo":5,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":2,"typeId":47,"isVariation":true,"shape":"1-2-2-2"},{"id":608,"key":"608","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":8,"barre":1,"symbol":"1"}],[{"fretNo":8,"barre":true,"symbol":"1"}],[{"fretNo":10,"symbol":"4"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":10,"isRootNote":true,"symbol":"3"}]],"firstFret":7,"variation":2,"realVariation":99,"rootNoteId":2,"typeId":47,"isVariation":true,"shape":"1-1-3-0-3"},{"id":610,"key":"610","strings":[[{"fretNo":11,"symbol":"1"}],[{"fretNo":13,"symbol":"4"}],[{"fretNo":12,"symbol":"3"}],[{"fretNo":12,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":10,"variation":3,"realVariation":99,"rootNoteId":2,"typeId":47,"isVariation":true,"shape":"1-3-2-2"}],"message":null}
+{
+  "results": [
+    {
+      "id": 609,
+      "key": "609",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 4,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 2,
+      "typeId": 47,
+      "isVariation": true,
+      "shape": "1-2-2-2"
+    },
+    {
+      "id": 608,
+      "key": "608",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "barre": 1,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "isRootNote": true,
+            "symbol": "3"
+          }
+        ]
+      ],
+      "firstFret": 7,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 2,
+      "typeId": 47,
+      "isVariation": true,
+      "shape": "1-1-3-0-3"
+    },
+    {
+      "id": 610,
+      "key": "610",
+      "strings": [
+        [
+          {
+            "fretNo": 11,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 12,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 12,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 2,
+      "typeId": 47,
+      "isVariation": true,
+      "shape": "1-3-2-2"
+    }
+  ],
+  "message": null
+}

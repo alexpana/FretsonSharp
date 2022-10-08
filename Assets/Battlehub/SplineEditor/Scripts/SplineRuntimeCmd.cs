@@ -6,9 +6,10 @@ using System.IO;
 using System.Linq;
 #endif
 
-using UnityEngine;
-using Battlehub.RTEditor;
 using System;
+using Battlehub.RTEditor;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Battlehub.SplineEditor
 {
@@ -35,7 +36,6 @@ namespace Battlehub.SplineEditor
 #endif
 
 
-
     public class SplineRuntimeCmd : MonoBehaviour
     {
         public Spline m_spline;
@@ -43,20 +43,14 @@ namespace Battlehub.SplineEditor
 
         private Spline GetSelectedSpline()
         {
-            if (RuntimeSelection.activeGameObject == null)
-            {
-                return null;
-            }
+            if (RuntimeSelection.activeGameObject == null) return null;
 
             return RuntimeSelection.activeGameObject.GetComponentInParent<Spline>();
         }
 
         private SplineControlPoint GetSelectedControlPoint()
         {
-            if (RuntimeSelection.activeGameObject == null)
-            {
-                return null;
-            }
+            if (RuntimeSelection.activeGameObject == null) return null;
 
             return RuntimeSelection.activeGameObject.GetComponentInParent<SplineControlPoint>();
         }
@@ -73,12 +67,12 @@ namespace Battlehub.SplineEditor
             RuntimeSelection.SelectionChanged -= OnRuntimeSelectionChanged;
         }
 
-        private void OnRuntimeSelectionChanged(UnityEngine.Object[] unselectedObjects)
+        private void OnRuntimeSelectionChanged(Object[] unselectedObjects)
         {
             if (SplineBase.ConvergingSpline)
             {
-                SplineControlPoint selectedControlPoint = GetSelectedControlPoint();
-                Spline selectedSpline = GetSelectedSpline();
+                var selectedControlPoint = GetSelectedControlPoint();
+                var selectedSpline = GetSelectedSpline();
                 if (selectedControlPoint == null || m_controlPoint == null || m_spline == null)
                 {
                     SplineBase.ConvergingSpline = null;
@@ -106,30 +100,18 @@ namespace Battlehub.SplineEditor
 
         public void RunAction<T>(Action<T, GameObject> action)
         {
-            GameObject[] selectedObjects = RuntimeSelection.gameObjects;
-            if (selectedObjects == null)
+            var selectedObjects = RuntimeSelection.gameObjects;
+            if (selectedObjects == null) return;
+
+            for (var i = 0; i < selectedObjects.Length; ++i)
             {
-                return;
-            }
+                var selectedObject = selectedObjects[i];
+                if (selectedObject == null) continue;
 
-            for (int i = 0; i < selectedObjects.Length; ++i)
-            {
-                GameObject selectedObject = selectedObjects[i];
-                if (selectedObject == null)
-                {
-                    continue;
-                }
+                var spline = selectedObject.GetComponentInParent<T>();
+                if (spline == null) continue;
 
-                T spline = selectedObject.GetComponentInParent<T>();
-                if (spline == null)
-                {
-                    continue;
-                }
-
-                if (action != null)
-                {
-                    action(spline, selectedObject);
-                }
+                if (action != null) action(spline, selectedObject);
             }
         }
 
@@ -137,10 +119,7 @@ namespace Battlehub.SplineEditor
         {
             RunAction<Spline>((spline, go) =>
             {
-                if (spline.NextSpline == null)
-                {
-                    spline.Append();
-                }
+                if (spline.NextSpline == null) spline.Append();
             });
         }
 
@@ -150,11 +129,8 @@ namespace Battlehub.SplineEditor
             {
                 if (go != null)
                 {
-                    SplineControlPoint ctrlPoint = go.GetComponent<SplineControlPoint>();
-                    if (ctrlPoint != null)
-                    {
-                        spline.Insert((ctrlPoint.Index + 2) / 3);
-                    }
+                    var ctrlPoint = go.GetComponent<SplineControlPoint>();
+                    if (ctrlPoint != null) spline.Insert((ctrlPoint.Index + 2) / 3);
                 }
             });
         }
@@ -163,10 +139,7 @@ namespace Battlehub.SplineEditor
         {
             RunAction<Spline>((spline, go) =>
             {
-                if (spline.PrevSpline == null)
-                {
-                    spline.Prepend();
-                }
+                if (spline.PrevSpline == null) spline.Prepend();
             });
         }
 
@@ -176,12 +149,13 @@ namespace Battlehub.SplineEditor
             {
                 if (go != null)
                 {
-                    SplineControlPoint ctrlPoint = go.GetComponent<SplineControlPoint>();
+                    var ctrlPoint = go.GetComponent<SplineControlPoint>();
                     if (ctrlPoint != null)
                     {
-                        int curveIndex = Mathf.Min((ctrlPoint.Index + 1) / 3, spline.CurveCount - 1);
+                        var curveIndex = Mathf.Min((ctrlPoint.Index + 1) / 3, spline.CurveCount - 1);
                         spline.Remove(curveIndex);
                     }
+
                     RuntimeSelection.activeObject = spline.gameObject;
                 }
             });
@@ -224,49 +198,33 @@ namespace Battlehub.SplineEditor
 
         public virtual void Separate()
         {
-            if (m_spline != null && m_controlPoint != null)
-            {
-                Separate(m_spline, m_controlPoint.Index);
-            }
+            if (m_spline != null && m_controlPoint != null) Separate(m_spline, m_controlPoint.Index);
         }
 
         public static bool Converge(SplineBase spline, SplineBase branch, int splineIndex, int branchIndex)
         {
-            if (spline == branch)
-            {
-                return false;
-            }
+            if (spline == branch) return false;
 
-            if (branch.PrevSpline != null && branch.NextSpline != null)
-            {
-                return false;
-            }
+            if (branch.PrevSpline != null && branch.NextSpline != null) return false;
 
             if (branchIndex == 0)
             {
-                if (branch.PrevSpline != null)
-                {
-                    return false;
-                }
+                if (branch.PrevSpline != null) return false;
 
                 spline.SetBranch(branch, splineIndex, false);
                 return true;
             }
-            else if (branchIndex == branch.ControlPointCount - 1)
+
+            if (branchIndex == branch.ControlPointCount - 1)
             {
-                if (branch.NextSpline != null)
-                {
-                    return false;
-                }
+                if (branch.NextSpline != null) return false;
 
                 spline.SetBranch(branch, splineIndex, true);
                 return true;
             }
-            else
-            {
-                Debug.LogError("branchIndex should be equal to 0 or branch.ControlPointCount - 1");
-                return false;
-            }
+
+            Debug.LogError("branchIndex should be equal to 0 or branch.ControlPointCount - 1");
+            return false;
         }
 
         public static void Separate(SplineBase spline, int controlPointIndex)
@@ -322,6 +280,7 @@ namespace Battlehub.SplineEditor
         public class SplineSnapshots
         {
             public SplineSnapshot[] Data;
+
             public SplineSnapshots()
             {
                 Data = new SplineSnapshot[0];
@@ -330,13 +289,10 @@ namespace Battlehub.SplineEditor
 
         public virtual void Load()
         {
-            string dataAsString = PlayerPrefs.GetString("SplineEditorSave");
-            if (string.IsNullOrEmpty(dataAsString))
-            {
-                return;
-            }
-            SplineBase[] splines = FindObjectsOfType<SplineBase>();
-            SplineSnapshots snapshots = DeserializeFromString<SplineSnapshots>(dataAsString);
+            var dataAsString = PlayerPrefs.GetString("SplineEditorSave");
+            if (string.IsNullOrEmpty(dataAsString)) return;
+            var splines = FindObjectsOfType<SplineBase>();
+            var snapshots = DeserializeFromString<SplineSnapshots>(dataAsString);
 
             //Should be replaced with more sophisticated load & save & validation logic
             if (splines.Length != snapshots.Data.Length)
@@ -346,21 +302,15 @@ namespace Battlehub.SplineEditor
                 //throw new NotImplementedException("Wrong data in save file.");
             }
 
-            for (int i = 0; i < snapshots.Data.Length; ++i)
-            {
-                splines[i].Load(snapshots.Data[i]);
-            }
+            for (var i = 0; i < snapshots.Data.Length; ++i) splines[i].Load(snapshots.Data[i]);
         }
 
         public virtual void Save()
         {
-            SplineBase[] splines = FindObjectsOfType<SplineBase>();
-            SplineSnapshots snapshots = new SplineSnapshots { Data = new SplineSnapshot[splines.Length] };
-            for (int i = 0; i < snapshots.Data.Length; ++i)
-            {
-                snapshots.Data[i] = splines[i].Save();
-            }
-            string dataAsString = SerializeToString(snapshots);
+            var splines = FindObjectsOfType<SplineBase>();
+            var snapshots = new SplineSnapshots { Data = new SplineSnapshot[splines.Length] };
+            for (var i = 0; i < snapshots.Data.Length; ++i) snapshots.Data[i] = splines[i].Save();
+            var dataAsString = SerializeToString(snapshots);
             PlayerPrefs.SetString("SplineEditorSave", dataAsString);
         }
 #endif
@@ -406,5 +356,4 @@ namespace Battlehub.SplineEditor
 #endif
         }
     }
-
 }

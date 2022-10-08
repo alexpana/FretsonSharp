@@ -1,19 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEditor;
 using UnityEditor.UI;
-using UnityEditor;
+using UnityEngine;
 
 namespace geniikw.DataRenderer2D.Editors
 {
     [CustomEditor(typeof(UILine))]
     public class UILineEditor : ImageEditor
     {
-        PointHandler _pointHandler;
         private MonoBehaviour _owner;
+        private PointHandler _pointHandler;
 
         private SerializedProperty _SplineData;
-        
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -31,7 +29,7 @@ namespace geniikw.DataRenderer2D.Editors
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            EditorGUILayout.PropertyField(_SplineData,true);
+            EditorGUILayout.PropertyField(_SplineData, true);
 
             base.OnInspectorGUI();
             serializedObject.ApplyModifiedProperties();

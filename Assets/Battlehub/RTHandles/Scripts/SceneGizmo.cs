@@ -1,5 +1,5 @@
-﻿using Battlehub.Utils;
-using System;
+﻿using System;
+using Battlehub.Utils;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,49 +10,49 @@ namespace Battlehub.RTHandles
     {
         public Camera SceneCamera;
         public Transform Pivot;
-        public Vector2 Size = new Vector2(96, 96);
+        public Vector2 Size = new(96, 96);
 
         public UnityEvent OrientationChanging;
         public UnityEvent OrientationChanged;
         public UnityEvent ProjectionChanged;
-     
+        private readonly float m_animationDuration = 0.2f;
+
         private float m_aspect;
+        private Rect m_buttonRect;
+
+        private GUIStyle m_buttonStyle;
         private Camera m_camera;
-        
+        private BoxCollider m_colliderBackward;
+        private BoxCollider m_colliderDown;
+        private BoxCollider m_colliderForward;
+        private BoxCollider m_colliderLeft;
+        private BoxCollider m_colliderProj;
+        private BoxCollider m_colliderRight;
+        private Collider[] m_colliders;
+        private GameObject m_collidersGO;
+        private BoxCollider m_colliderUp;
+        private Vector3 m_gizmoPosition;
+
+        private bool m_mouseOver;
+        private GUIStyle m_oldButtonStyle;
+
+        private Vector3 m_position;
+        private IAnimationInfo m_positionAnimation;
+        private IAnimationInfo m_rotateAnimation;
+        private Quaternion m_rotation;
+
+        private float m_screenHeight;
+        private float m_screenWidth;
+        private Vector3 m_selectedAxis;
+
 
         private float m_xAlpha = 1.0f;
         private float m_yAlpha = 1.0f;
         private float m_zAlpha = 1.0f;
-        private float m_animationDuration = 0.2f;
-
-        private GUIStyle m_buttonStyle;
-        private GUIStyle m_oldButtonStyle;
-        private Rect m_buttonRect;
-
-        private bool m_mouseOver;
-        private Vector3 m_selectedAxis;
-        private GameObject m_collidersGO;
-        private BoxCollider m_colliderProj;
-        private BoxCollider m_colliderUp;
-        private BoxCollider m_colliderDown;
-        private BoxCollider m_colliderForward;
-        private BoxCollider m_colliderBackward;
-        private BoxCollider m_colliderLeft;
-        private BoxCollider m_colliderRight;
-        private Collider[] m_colliders;
-
-        private Vector3 m_position;
-        private Quaternion m_rotation;
-        private Vector3 m_gizmoPosition;
-        private IAnimationInfo m_rotateAnimation;
-        private IAnimationInfo m_positionAnimation;
-
-        private float m_screenHeight;
-        private float m_screenWidth;
 
         private bool IsOrthographic
         {
-            get { return m_camera.orthographic; }
+            get => m_camera.orthographic;
             set
             {
                 m_camera.orthographic = value;
@@ -67,15 +67,9 @@ namespace Battlehub.RTHandles
 
         private void Awake()
         {
-            if (SceneCamera == null)
-            {
-                SceneCamera = Camera.main;
-            }
+            if (SceneCamera == null) SceneCamera = Camera.main;
 
-            if(Pivot == null)
-            {
-                Pivot = transform;
-            }
+            if (Pivot == null) Pivot = transform;
 
             m_collidersGO = new GameObject();
             m_collidersGO.transform.SetParent(transform, false);
@@ -91,7 +85,11 @@ namespace Battlehub.RTHandles
             m_colliderForward = m_collidersGO.AddComponent<BoxCollider>();
             m_colliderBackward = m_collidersGO.AddComponent<BoxCollider>();
 
-            m_colliders = new[] { m_colliderProj, m_colliderUp, m_colliderDown, m_colliderRight, m_colliderLeft, m_colliderForward, m_colliderBackward };
+            m_colliders = new[]
+            {
+                m_colliderProj, m_colliderUp, m_colliderDown, m_colliderRight, m_colliderLeft, m_colliderForward,
+                m_colliderBackward
+            };
             DisableColliders();
 
             m_camera = GetComponent<Camera>();
@@ -108,64 +106,15 @@ namespace Battlehub.RTHandles
             UpdateAlpha(ref m_xAlpha, Vector3.right, 1);
             UpdateAlpha(ref m_yAlpha, Vector3.up, 1);
             UpdateAlpha(ref m_zAlpha, Vector3.forward, 1);
-
         }
 
         private void Start()
         {
             if (Run.Instance == null)
             {
-                GameObject runGO = new GameObject();
+                var runGO = new GameObject();
                 runGO.name = "Run";
                 runGO.AddComponent<Run>();
-            }
-        }
-
-        public void UpdateLayout()
-        {
-            if(m_camera == null)
-            {
-                return;
-            }
-
-            m_aspect = m_camera.aspect;
-
-            m_camera.pixelRect = new Rect(SceneCamera.pixelRect.min.x + SceneCamera.pixelWidth - Size.x, SceneCamera.pixelRect.min.y + SceneCamera.pixelHeight - Size.y, Size.x, Size.y);
-            m_camera.depth = SceneCamera.depth + 1;
-            m_aspect = m_camera.aspect;
-
-            m_buttonRect = new Rect(SceneCamera.pixelRect.min.x + SceneCamera.pixelWidth - Size.x / 2 - 20, (Screen.height - SceneCamera.pixelRect.yMax) + Size.y - 5.0f, 40, 30);
-            m_buttonStyle = new GUIStyle();
-            m_buttonStyle.alignment = TextAnchor.MiddleCenter;
-            m_buttonStyle.normal.textColor = new Color(0.8f, 0.8f, 0.8f, 0.8f);
-            m_buttonStyle.fontSize = 12;
-        }
-
-        private Vector3 GetGizmoPosition()
-        {
-            return transform.TransformPoint(Vector3.forward * 5);
-        }
-
-        private void OnPostRender()
-        {
-            RuntimeHandles.DoSceneGizmo(GetGizmoPosition(), Quaternion.identity, m_selectedAxis, Size.y / 96, m_xAlpha, m_yAlpha, m_zAlpha);
-        }
-
-        private void OnGUI()
-        {
-            if (SceneCamera.orthographic)
-            {
-                if (GUI.Button(m_buttonRect, "Iso", m_buttonStyle))
-                {
-                    IsOrthographic = false;
-                }
-            }
-            else
-            {
-                if (GUI.Button(m_buttonRect, "Persp", m_buttonStyle))
-                {
-                    IsOrthographic = true;
-                }
             }
         }
 
@@ -187,76 +136,51 @@ namespace Battlehub.RTHandles
 
             if (m_aspect != m_camera.aspect)
             {
-                m_camera.pixelRect = new Rect(SceneCamera.pixelWidth - Size.x, SceneCamera.pixelHeight - Size.y, Size.x, Size.y);
+                m_camera.pixelRect = new Rect(SceneCamera.pixelWidth - Size.x, SceneCamera.pixelHeight - Size.y, Size.x,
+                    Size.y);
                 m_aspect = m_camera.aspect;
             }
 
-            float delta = Time.deltaTime / m_animationDuration;
-            bool updateAlpha = UpdateAlpha(ref m_xAlpha, Vector3.right, delta);
+            var delta = Time.deltaTime / m_animationDuration;
+            var updateAlpha = UpdateAlpha(ref m_xAlpha, Vector3.right, delta);
             updateAlpha |= UpdateAlpha(ref m_yAlpha, Vector3.up, delta);
             updateAlpha |= UpdateAlpha(ref m_zAlpha, Vector3.forward, delta);
 
             m_camera.transform.rotation = SceneCamera.transform.rotation;
             Vector2 guiMousePositon = Input.mousePosition;
             guiMousePositon.y = Screen.height - guiMousePositon.y;
-            bool isMouseOverButton = m_buttonRect.Contains(guiMousePositon, true);
+            var isMouseOverButton = m_buttonRect.Contains(guiMousePositon, true);
             RuntimeTools.IsSceneGizmoSelected = isMouseOverButton;
 
             if (m_camera.pixelRect.Contains(Input.mousePosition))
             {
-                if(!m_mouseOver || updateAlpha)
-                {
-                    EnableColliders();
-                }
+                if (!m_mouseOver || updateAlpha) EnableColliders();
 
-                Collider collider = HitTest();
-                if(collider == null || m_rotateAnimation != null && m_rotateAnimation.InProgress)
-                {
+                var collider = HitTest();
+                if (collider == null || (m_rotateAnimation != null && m_rotateAnimation.InProgress))
                     m_selectedAxis = Vector3.zero;
-                }
-                else if(collider == m_colliderProj)
-                {
+                else if (collider == m_colliderProj)
                     m_selectedAxis = Vector3.one;
-                }
-                else if(collider == m_colliderUp)
-                {
+                else if (collider == m_colliderUp)
                     m_selectedAxis = Vector3.up;
-                }
-                else if(collider == m_colliderDown)
-                {
+                else if (collider == m_colliderDown)
                     m_selectedAxis = Vector3.down;
-                }
-                else if(collider == m_colliderForward)
-                {
+                else if (collider == m_colliderForward)
                     m_selectedAxis = Vector3.forward;
-                }
-                else if(collider == m_colliderBackward)
-                {
+                else if (collider == m_colliderBackward)
                     m_selectedAxis = Vector3.back;
-                }
-                else if(collider == m_colliderRight)
-                {
+                else if (collider == m_colliderRight)
                     m_selectedAxis = Vector3.right;
-                }
-                else if(collider == m_colliderLeft)
-                {
-                    m_selectedAxis = Vector3.left;
-                }
+                else if (collider == m_colliderLeft) m_selectedAxis = Vector3.left;
 
-          
+
                 if (m_selectedAxis != Vector3.zero || isMouseOverButton)
-                {
                     RuntimeTools.IsSceneGizmoSelected = true;
-                }
                 else
-                {
                     RuntimeTools.IsSceneGizmoSelected = false;
-                }
-               
+
                 if (Input.GetMouseButtonUp(0))
-                {
-                    
-                    if(m_selectedAxis != Vector3.zero)
+                    if (m_selectedAxis != Vector3.zero)
                     {
                         if (m_selectedAxis == Vector3.one)
                         {
@@ -264,23 +188,17 @@ namespace Battlehub.RTHandles
                         }
                         else
                         {
-                            if(m_rotateAnimation == null || !m_rotateAnimation.InProgress)
-                            {
-                                if(OrientationChanging != null)
-                                {
+                            if (m_rotateAnimation == null || !m_rotateAnimation.InProgress)
+                                if (OrientationChanging != null)
                                     OrientationChanging.Invoke();
-                                }
-                            }
 
-                            if(m_rotateAnimation != null)
-                            {     
-                                m_rotateAnimation.Abort();
-                            }
+                            if (m_rotateAnimation != null) m_rotateAnimation.Abort();
 
-                            Vector3 pivot =  Pivot.transform.position;
-                            Vector3 radiusVector = Vector3.back * (SceneCamera.transform.position - pivot).magnitude;
-                            Quaternion targetRotation = Quaternion.LookRotation(-m_selectedAxis, Vector3.up);
-                            m_rotateAnimation = new QuaternionAnimationInfo(SceneCamera.transform.rotation, targetRotation, 0.4f, QuaternionAnimationInfo.EaseOutCubic,
+                            var pivot = Pivot.transform.position;
+                            var radiusVector = Vector3.back * (SceneCamera.transform.position - pivot).magnitude;
+                            var targetRotation = Quaternion.LookRotation(-m_selectedAxis, Vector3.up);
+                            m_rotateAnimation = new QuaternionAnimationInfo(SceneCamera.transform.rotation,
+                                targetRotation, 0.4f, QuaternionAnimationInfo.EaseOutCubic,
                                 (target, value, t, completed) =>
                                 {
                                     SceneCamera.transform.position = pivot + value * radiusVector;
@@ -291,24 +209,19 @@ namespace Battlehub.RTHandles
                                         DisableColliders();
                                         EnableColliders();
 
-                                        if (OrientationChanged != null)
-                                        {
-                                            OrientationChanged.Invoke();
-                                        }
+                                        if (OrientationChanged != null) OrientationChanged.Invoke();
                                     }
-
                                 });
 
                             Run.Instance.Animation(m_rotateAnimation);
                         }
                     }
-                }
 
                 m_mouseOver = true;
             }
             else
             {
-                if(m_mouseOver)
+                if (m_mouseOver)
                 {
                     DisableColliders();
                     RuntimeTools.IsSceneGizmoSelected = false;
@@ -316,7 +229,48 @@ namespace Battlehub.RTHandles
 
                 m_mouseOver = false;
             }
-          
+        }
+
+        private void OnGUI()
+        {
+            if (SceneCamera.orthographic)
+            {
+                if (GUI.Button(m_buttonRect, "Iso", m_buttonStyle)) IsOrthographic = false;
+            }
+            else
+            {
+                if (GUI.Button(m_buttonRect, "Persp", m_buttonStyle)) IsOrthographic = true;
+            }
+        }
+
+        private void OnPostRender()
+        {
+            RuntimeHandles.DoSceneGizmo(GetGizmoPosition(), Quaternion.identity, m_selectedAxis, Size.y / 96, m_xAlpha,
+                m_yAlpha, m_zAlpha);
+        }
+
+        public void UpdateLayout()
+        {
+            if (m_camera == null) return;
+
+            m_aspect = m_camera.aspect;
+
+            m_camera.pixelRect = new Rect(SceneCamera.pixelRect.min.x + SceneCamera.pixelWidth - Size.x,
+                SceneCamera.pixelRect.min.y + SceneCamera.pixelHeight - Size.y, Size.x, Size.y);
+            m_camera.depth = SceneCamera.depth + 1;
+            m_aspect = m_camera.aspect;
+
+            m_buttonRect = new Rect(SceneCamera.pixelRect.min.x + SceneCamera.pixelWidth - Size.x / 2 - 20,
+                Screen.height - SceneCamera.pixelRect.yMax + Size.y - 5.0f, 40, 30);
+            m_buttonStyle = new GUIStyle();
+            m_buttonStyle.alignment = TextAnchor.MiddleCenter;
+            m_buttonStyle.normal.textColor = new Color(0.8f, 0.8f, 0.8f, 0.8f);
+            m_buttonStyle.fontSize = 12;
+        }
+
+        private Vector3 GetGizmoPosition()
+        {
+            return transform.TransformPoint(Vector3.forward * 5);
         }
 
         private void EnableColliders()
@@ -327,11 +281,13 @@ namespace Battlehub.RTHandles
                 m_colliderForward.enabled = true;
                 m_colliderBackward.enabled = true;
             }
+
             if (m_yAlpha == 1)
             {
                 m_colliderUp.enabled = true;
                 m_colliderDown.enabled = true;
             }
+
             if (m_xAlpha == 1)
             {
                 m_colliderRight.enabled = true;
@@ -342,29 +298,24 @@ namespace Battlehub.RTHandles
 
         private void DisableColliders()
         {
-            for (int i = 0; i < m_colliders.Length; ++i)
-            {
-                m_colliders[i].enabled = false;
-            }
+            for (var i = 0; i < m_colliders.Length; ++i) m_colliders[i].enabled = false;
         }
 
         private Collider HitTest()
         {
-            Ray ray = m_camera.ScreenPointToRay(Input.mousePosition);
-            float minDistance = float.MaxValue;
+            var ray = m_camera.ScreenPointToRay(Input.mousePosition);
+            var minDistance = float.MaxValue;
             Collider result = null;
-            for(int i = 0; i < m_colliders.Length; ++i)
+            for (var i = 0; i < m_colliders.Length; ++i)
             {
-                Collider collider = m_colliders[i];
+                var collider = m_colliders[i];
                 RaycastHit hitInfo;
                 if (collider.Raycast(ray, out hitInfo, m_gizmoPosition.magnitude * 5))
-                {
-                    if(hitInfo.distance < minDistance)
+                    if (hitInfo.distance < minDistance)
                     {
                         minDistance = hitInfo.distance;
                         result = hitInfo.collider;
                     }
-                }
             }
 
             return result;
@@ -373,7 +324,7 @@ namespace Battlehub.RTHandles
         private void InitColliders()
         {
             m_gizmoPosition = GetGizmoPosition();
-            float sScale = RuntimeHandles.GetScreenScale(m_gizmoPosition, m_camera) * Size.y / 96;
+            var sScale = RuntimeHandles.GetScreenScale(m_gizmoPosition, m_camera) * Size.y / 96;
 
             m_collidersGO.transform.rotation = Quaternion.identity;
             m_collidersGO.transform.position = GetGizmoPosition();
@@ -388,7 +339,7 @@ namespace Battlehub.RTHandles
             m_colliderDown.center = new Vector3(0.0f, -(size + size / 2), 0.0f) * sScale;
 
             m_colliderForward.size = new Vector3(size, size, size * 2) * sScale;
-            m_colliderForward.center = new Vector3(0.0f,  0.0f, size + size / 2) * sScale;
+            m_colliderForward.center = new Vector3(0.0f, 0.0f, size + size / 2) * sScale;
 
             m_colliderBackward.size = new Vector3(size, size, size * 2) * sScale;
             m_colliderBackward.center = new Vector3(0.0f, 0.0f, -(size + size / 2)) * sScale;
@@ -402,17 +353,13 @@ namespace Battlehub.RTHandles
 
         private bool UpdateAlpha(ref float alpha, Vector3 axis, float delta)
         {
-            bool hide = Math.Abs(Vector3.Dot(SceneCamera.transform.forward, axis)) > 0.9;
+            var hide = Math.Abs(Vector3.Dot(SceneCamera.transform.forward, axis)) > 0.9;
             if (hide)
             {
                 if (alpha > 0.0f)
                 {
-                    
                     alpha -= delta;
-                    if (alpha < 0.0f)
-                    {
-                        alpha = 0.0f;
-                    }
+                    if (alpha < 0.0f) alpha = 0.0f;
                     return true;
                 }
             }
@@ -421,10 +368,7 @@ namespace Battlehub.RTHandles
                 if (alpha < 1.0f)
                 {
                     alpha += delta;
-                    if (alpha > 1.0f)
-                    {
-                        alpha = 1.0f;
-                    }
+                    if (alpha > 1.0f) alpha = 1.0f;
                     return true;
                 }
             }
@@ -433,4 +377,3 @@ namespace Battlehub.RTHandles
         }
     }
 }
-

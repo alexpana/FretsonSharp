@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace geniikw.DataRenderer2D.Signal
@@ -9,10 +8,10 @@ namespace geniikw.DataRenderer2D.Signal
         SignalData Signal { get; }
     }
 
-    public class SignalBuilder 
+    public class SignalBuilder
     {
-        ISignalData _data;
-        IUnitSize _unit;
+        private readonly ISignalData _data;
+        private readonly IUnitSize _unit;
 
         public SignalBuilder(ISignalData data, IUnitSize unit)
         {
@@ -22,7 +21,6 @@ namespace geniikw.DataRenderer2D.Signal
 
         public void ApplySignal(ref float x0, ref float x1, SignalData.SignalOneSet data)
         {
-
         }
 
         public IEnumerable<IMesh> Draw()
@@ -54,6 +52,7 @@ namespace geniikw.DataRenderer2D.Signal
                     v1.position.y = size.y / 2f + signal.up.Output(i, signal.t);
                     v2.position.y = size.y / 2f + signal.up.Output(ni, signal.t);
                 }
+
                 if (signal.down.use)
                 {
                     v0.position.y = -size.y / 2f + signal.down.Output(i, signal.t);
@@ -67,8 +66,8 @@ namespace geniikw.DataRenderer2D.Signal
 
                 yield return new Quad(v0, v3, v1, v2);
             }
+
             yield return new Quad();
         }
-        
     }
 }

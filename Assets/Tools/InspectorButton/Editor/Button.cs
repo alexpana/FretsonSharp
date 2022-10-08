@@ -1,15 +1,15 @@
-﻿namespace EditorCools.Editor
-{
-    using System.Reflection;
-    using System.Collections.Generic;
-    using UnityEditor;
-    using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
 
+namespace EditorCools.Editor
+{
     public class Button
     {
+        public readonly ButtonAttribute ButtonAttribute;
         public readonly string DisplayName;
         public readonly MethodInfo Method;
-        public readonly ButtonAttribute ButtonAttribute;
 
         public Button(MethodInfo method, ButtonAttribute buttonAttribute)
         {
@@ -25,10 +25,7 @@
         {
             if (!GUILayout.Button(DisplayName)) return;
 
-            foreach (object target in targets)
-            {
-                Method.Invoke(target, null);
-            }
+            foreach (var target in targets) Method.Invoke(target, null);
         }
     }
 }

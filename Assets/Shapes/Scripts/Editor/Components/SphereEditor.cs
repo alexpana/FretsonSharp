@@ -2,21 +2,20 @@
 
 // Shapes © Freya Holmér - https://twitter.com/FreyaHolmer/
 // Website & Documentation - https://acegikmo.com/shapes/
-namespace Shapes {
+namespace Shapes
+{
+    [CustomEditor(typeof(Sphere))]
+    [CanEditMultipleObjects]
+    public class SphereEditor : ShapeRendererEditor
+    {
+        private readonly SerializedProperty propRadius = null;
+        private readonly SerializedProperty propRadiusSpace = null;
 
-	[CustomEditor( typeof(Sphere) )]
-	[CanEditMultipleObjects]
-	public class SphereEditor : ShapeRendererEditor {
-
-		SerializedProperty propRadius = null;
-		SerializedProperty propRadiusSpace = null;
-
-		public override void OnInspectorGUI() {
-			base.BeginProperties();
-			ShapesUI.FloatInSpaceField( propRadius, propRadiusSpace );
-			base.EndProperties();
-		}
-
-	}
-
+        public override void OnInspectorGUI()
+        {
+            BeginProperties();
+            ShapesUI.FloatInSpaceField(propRadius, propRadiusSpace);
+            EndProperties();
+        }
+    }
 }

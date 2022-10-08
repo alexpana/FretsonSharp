@@ -1,14 +1,15 @@
-﻿namespace EditorCools
-{
-    using System;
+﻿using System;
 
-    [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
+namespace EditorCools
+{
+    [AttributeUsage(AttributeTargets.Method)]
     public sealed class ButtonAttribute : Attribute
     {
+        public readonly bool HasRow;
         public readonly string Name;
         public readonly string Row;
         public readonly float Space;
-        public readonly bool HasRow;
+
         public ButtonAttribute(string name = default, string row = default, float space = default)
         {
             Row = row;
@@ -18,4 +19,3 @@
         }
     }
 }
-

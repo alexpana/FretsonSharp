@@ -1,1 +1,164 @@
-{"results":[{"id":744,"key":"744","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":6,"symbol":"4"}],[{"fretNo":5,"symbol":"2"}],[{"fretNo":4,"symbol":"1"}],[{"fretNo":6,"isRootNote":true,"symbol":"3"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":3,"variation":1,"realVariation":99,"rootNoteId":3,"typeId":26,"isVariation":true,"shape":"3-2-1-3"},{"id":746,"key":"746","strings":[[{"fretNo":11,"isRootNote":true,"barre":1,"symbol":"4"}],[{"fretNo":11,"barre":true,"symbol":"4"}],[{"fretNo":10,"barre":1,"symbol":"2"}],[{"fretNo":10,"barre":true,"symbol":"2"}],[{"fretNo":9,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":8,"variation":2,"realVariation":99,"rootNoteId":3,"typeId":26,"isVariation":true,"shape":"3-3-2-2-1"},{"id":745,"key":"745","strings":[[{"fretNo":13,"symbol":"4"}],[{"fretNo":13,"symbol":"3"}],[{"fretNo":11,"symbol":"1"}],[{"fretNo":13,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":10,"variation":3,"realVariation":99,"rootNoteId":3,"typeId":26,"isVariation":true,"shape":"3-3-1-3"}],"message":null}
+{
+  "results": [
+    {
+      "id": 744,
+      "key": "744",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 4,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "isRootNote": true,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 3,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 3,
+      "typeId": 26,
+      "isVariation": true,
+      "shape": "3-2-1-3"
+    },
+    {
+      "id": 746,
+      "key": "746",
+      "strings": [
+        [
+          {
+            "fretNo": 11,
+            "isRootNote": true,
+            "barre": 1,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 11,
+            "barre": true,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "barre": 1,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "barre": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 8,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 3,
+      "typeId": 26,
+      "isVariation": true,
+      "shape": "3-3-2-2-1"
+    },
+    {
+      "id": 745,
+      "key": "745",
+      "strings": [
+        [
+          {
+            "fretNo": 13,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 11,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 3,
+      "typeId": 26,
+      "isVariation": true,
+      "shape": "3-3-1-3"
+    }
+  ],
+  "message": null
+}

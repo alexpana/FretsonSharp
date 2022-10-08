@@ -1,18 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
+
 namespace geniikw.DataRenderer2D.Editors
 {
     [CustomPropertyDrawer(typeof(Spline))]
     public class SplinePropertyDrawer : PropertyDrawer
     {
-        float PointHeight { get
+        private float PointHeight
+        {
+            get
             {
                 if (EditorSetting.Get.onlyViewWidth)
                     return 1.2f;
-                else
-                    return 4.7f;
+                return 4.7f;
             }
         }
 
@@ -20,13 +20,16 @@ namespace geniikw.DataRenderer2D.Editors
         {
             var height = 1f;
             var mode = property.FindPropertyRelative("mode").enumValueIndex;
-            
+
             if (mode == 0)
-                height += (property.FindPropertyRelative("points").isExpanded?  property.FindPropertyRelative("points").arraySize* PointHeight + 2f : 1f );
+                height += property.FindPropertyRelative("points").isExpanded
+                    ? property.FindPropertyRelative("points").arraySize * PointHeight + 2f
+                    : 1f;
             else if (mode == 1)
-                height += (property.FindPropertyRelative("pair").isExpanded ? 2f * PointHeight + 2f: 1f);
-            
-            height += property.FindPropertyRelative("option").isExpanded ? 10f : 1f; ;
+                height += property.FindPropertyRelative("pair").isExpanded ? 2f * PointHeight + 2f : 1f;
+
+            height += property.FindPropertyRelative("option").isExpanded ? 10f : 1f;
+            ;
 
             return height * EditorGUIUtility.singleLineHeight;
         }
@@ -43,7 +46,9 @@ namespace geniikw.DataRenderer2D.Editors
             var height = 0f;
             if (mode == 0)
             {
-                height = property.FindPropertyRelative("points").isExpanded ? (property.FindPropertyRelative("points").arraySize* PointHeight + 2f) : 1f;
+                height = property.FindPropertyRelative("points").isExpanded
+                    ? property.FindPropertyRelative("points").arraySize * PointHeight + 2f
+                    : 1f;
                 height *= EditorGUIUtility.singleLineHeight;
                 position.height = height;
                 EditorGUI.PropertyField(position, property.FindPropertyRelative("points"), true);
@@ -51,7 +56,7 @@ namespace geniikw.DataRenderer2D.Editors
             }
             else if (mode == 1)
             {
-                height = property.FindPropertyRelative("pair").isExpanded ?  2f* PointHeight+2f : 1f;
+                height = property.FindPropertyRelative("pair").isExpanded ? 2f * PointHeight + 2f : 1f;
                 height *= EditorGUIUtility.singleLineHeight;
 
                 position.height = height;
@@ -63,13 +68,10 @@ namespace geniikw.DataRenderer2D.Editors
             height = property.FindPropertyRelative("option").isExpanded ? 10f : 1f;
             height *= EditorGUIUtility.singleLineHeight;
             position.height = height;
-            EditorGUI.PropertyField(position, property.FindPropertyRelative("option"),true);
+            EditorGUI.PropertyField(position, property.FindPropertyRelative("option"), true);
 
             property.serializedObject.ApplyModifiedProperties();
             //base.OnGUI(position, property, label);
         }
-
-
-
     }
 }

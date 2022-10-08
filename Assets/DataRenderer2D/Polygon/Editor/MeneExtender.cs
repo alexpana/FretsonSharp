@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
 
 namespace geniikw.DataRenderer2D.Polygon.Editors
 {
@@ -15,8 +13,8 @@ namespace geniikw.DataRenderer2D.Polygon.Editors
             var p = go.AddComponent<WorldPolygon>();
             go.GetComponent<MeshRenderer>().material = new Material(Shader.Find("Diffuse"));
             p.data = Defulat();
-
         }
+
         [MenuItem("GameObject/2D Object/DataRenderer/UIPolygon")]
         public static void UIPolygon()
         {
@@ -36,7 +34,7 @@ namespace geniikw.DataRenderer2D.Polygon.Editors
 
         public static bool CheckCanvas(Transform t)
         {
-            if(t.parent != null)
+            if (t.parent != null)
                 return CheckCanvas(t.parent);
 
             if (t.GetComponent<Canvas>() == null)

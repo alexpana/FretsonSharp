@@ -1,1 +1,168 @@
-{"results":[{"id":1368,"key":"1368","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":1,"barre":3,"symbol":"1"}],[{"fretNo":3,"isRootNote":true,"symbol":"3"}],[{"fretNo":2,"symbol":"2"}],[{"fretNo":1,"isRootNote":true,"barre":true,"symbol":"1"}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":5,"typeId":4,"isVariation":true,"shape":"1-3-2-1"},{"id":1370,"key":"1370","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":9,"symbol":"3"}],[{"fretNo":10,"isRootNote":true,"symbol":"4"}],[{"fretNo":9,"symbol":"2"}],[{"fretNo":8,"isRootNote":true,"symbol":"1"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":7,"variation":2,"realVariation":99,"rootNoteId":5,"typeId":4,"isVariation":true,"shape":"2-3-2-1"},{"id":1369,"key":"1369","strings":[[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}],[{"fretNo":13,"barre":3,"symbol":"1"}],[{"fretNo":15,"isRootNote":true,"symbol":"3"}],[{"fretNo":14,"symbol":"2"}],[{"fretNo":13,"isRootNote":true,"barre":true,"symbol":"1"}]],"firstFret":10,"variation":3,"realVariation":99,"rootNoteId":5,"typeId":4,"isVariation":true,"shape":"1-3-2-1"}],"message":null}
+{
+  "results": [
+    {
+      "id": 1368,
+      "key": "1368",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": 3,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 3,
+            "isRootNote": true,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 2,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "isRootNote": true,
+            "barre": true,
+            "symbol": "1"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 5,
+      "typeId": 4,
+      "isVariation": true,
+      "shape": "1-3-2-1"
+    },
+    {
+      "id": 1370,
+      "key": "1370",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "isRootNote": true,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "isRootNote": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 7,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 5,
+      "typeId": 4,
+      "isVariation": true,
+      "shape": "2-3-2-1"
+    },
+    {
+      "id": 1369,
+      "key": "1369",
+      "strings": [
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": 3,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 15,
+            "isRootNote": true,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 14,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "isRootNote": true,
+            "barre": true,
+            "symbol": "1"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 5,
+      "typeId": 4,
+      "isVariation": true,
+      "shape": "1-3-2-1"
+    }
+  ],
+  "message": null
+}

@@ -1,74 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using System.Linq;
-using System;
 
 namespace geniikw.DataRenderer2D.Editors
 {
     public class PointHandler
     {
+        private readonly SerializedProperty _line;
+
+        private readonly SerializedProperty _mode;
+
         /// Line 
-        ///     List<Node> points 
-        ///          Vector3 position;
-        ///          Vector3 previousControlOffset;
-        ///          Vector3 nextControlOffset;
-        ///          Color color;
-        ///          float width;
-        ///          float angle;
-        ///          int nextDivieCount;
-        ///          Mode mode;
+        /// List
+        /// <Node>
+        ///     points
+        ///     Vector3 position;
+        ///     Vector3 previousControlOffset;
+        ///     Vector3 nextControlOffset;
+        ///     Color color;
+        ///     float width;
+        ///     float angle;
+        ///     int nextDivieCount;
+        ///     Mode mode;
         ///     float startRatio
         ///     float endRatio
+        private readonly Component _owner;
 
-        readonly Component _owner;
-        
-        readonly SerializedProperty _mode;
-        readonly SerializedProperty _line;
-        readonly SerializedObject _target;
+        private readonly SerializedObject _target;
+
+        private readonly float AddButtonAngle = 20f;
+        public float m_distanceBuffer = 0f;
 
         public float m_sizeBuffer = 0f;
-        public float m_distanceBuffer = 0f;
-                
-        readonly float AddButtonAngle = 20f;
-        
-        public IEnumerable<SerializedProperty> Points
-        {
-            get
-            {
-                if(!(_line.FindPropertyRelative("mode").enumValueIndex == 0))
-                {
-                    yield return _line.FindPropertyRelative("pair").FindPropertyRelative("n0");
-                    yield return _line.FindPropertyRelative("pair").FindPropertyRelative("n1");
-                }
-                else
-                {
-                    var points = _line.FindPropertyRelative("points");
-                    for (int i = 0; i < points.arraySize; i++)
-                    {
-                        yield return points.GetArrayElementAtIndex(i);
-                    }
-                }
-            }
-        }
-        public SerializedProperty GetPoint(int index)
-        {
-            if(_line.FindPropertyRelative("mode").enumValueIndex == 1)
-            {
-                if (index == 0)
-                    return _line.FindPropertyRelative("pair").FindPropertyRelative("n0");
-                else
-                    return _line.FindPropertyRelative("pair").FindPropertyRelative("n1");
-            }
-            return _line.FindPropertyRelative("points").GetArrayElementAtIndex(index);
-        }
-        public int Size
-        {
-            get {
-                if (_line.FindPropertyRelative("mode").enumValueIndex== 1) return 2;
-                return _line.FindPropertyRelative("points").arraySize; }
-        }
 
         public PointHandler(Component owner, SerializedObject target)
         {
@@ -76,11 +40,48 @@ namespace geniikw.DataRenderer2D.Editors
             _target = target;
 
             _line = target.FindProperty("line");
-                        
+
             var option = _line.FindPropertyRelative("option");
-            
+
             _mode = option.FindPropertyRelative("mode");
-           
+        }
+
+        public IEnumerable<SerializedProperty> Points
+        {
+            get
+            {
+                if (!(_line.FindPropertyRelative("mode").enumValueIndex == 0))
+                {
+                    yield return _line.FindPropertyRelative("pair").FindPropertyRelative("n0");
+                    yield return _line.FindPropertyRelative("pair").FindPropertyRelative("n1");
+                }
+                else
+                {
+                    var points = _line.FindPropertyRelative("points");
+                    for (var i = 0; i < points.arraySize; i++) yield return points.GetArrayElementAtIndex(i);
+                }
+            }
+        }
+
+        public int Size
+        {
+            get
+            {
+                if (_line.FindPropertyRelative("mode").enumValueIndex == 1) return 2;
+                return _line.FindPropertyRelative("points").arraySize;
+            }
+        }
+
+        public SerializedProperty GetPoint(int index)
+        {
+            if (_line.FindPropertyRelative("mode").enumValueIndex == 1)
+            {
+                if (index == 0)
+                    return _line.FindPropertyRelative("pair").FindPropertyRelative("n0");
+                return _line.FindPropertyRelative("pair").FindPropertyRelative("n1");
+            }
+
+            return _line.FindPropertyRelative("points").GetArrayElementAtIndex(index);
         }
 
         public void OnSceneGUI()
@@ -88,10 +89,10 @@ namespace geniikw.DataRenderer2D.Editors
             if (Application.isPlaying)
                 return;
 
-            int index = 0;
-            int size = Points.Count();
+            var index = 0;
+            var size = Points.Count();
 
-            foreach(var node in Points)
+            foreach (var node in Points)
             {
                 var position = node.FindPropertyRelative("position");
 
@@ -104,15 +105,16 @@ namespace geniikw.DataRenderer2D.Editors
                 HandlePoint(index, position);
                 index++;
             }
-            if(_line.FindPropertyRelative("mode").enumValueIndex == 0)
+
+            if (_line.FindPropertyRelative("mode").enumValueIndex == 0)
                 HandlesAddPointButton();
         }
 
         private void HandleNextControlPoint(int idx, SerializedProperty node)
         {
             var pos = _owner.transform.TransformPoint(node.FindPropertyRelative("position").vector3Value);
-            var nextCOffset =  node.FindPropertyRelative("nextControlOffset");
-            
+            var nextCOffset = node.FindPropertyRelative("nextControlOffset");
+
             var nextNode = GetPoint(idx + 1 == Size ? 0 : idx + 1);
             var nextPosition = _owner.transform.TransformPoint(nextNode.FindPropertyRelative("position").vector3Value);
 
@@ -135,12 +137,14 @@ namespace geniikw.DataRenderer2D.Editors
                     nextCOffset.vector3Value = Vector3.zero;
                     _target.ApplyModifiedProperties();
                 }
+
                 var buttonPosition = pos + nextDirection * buttonDistance;
                 Handles.DrawDottedLine(pos, buttonPosition, 5f);
-                if (Handles.Button(buttonPosition, _owner.transform.rotation, buttonSize, buttonSize, Handles.DotHandleCap))
+                if (Handles.Button(buttonPosition, _owner.transform.rotation, buttonSize, buttonSize,
+                        Handles.DotHandleCap))
                 {
                     var mid = (pos + nextPosition) / 2f;
-                    nextCOffset.vector3Value = _owner.transform.InverseTransformVector( mid - pos);
+                    nextCOffset.vector3Value = _owner.transform.InverseTransformVector(mid - pos);
                     _target.ApplyModifiedProperties();
                 }
             }
@@ -179,7 +183,8 @@ namespace geniikw.DataRenderer2D.Editors
 
                 var buttonPosition = pos + prevDirection * buttonDistance;
                 Handles.DrawDottedLine(pos, buttonPosition, 5f);
-                if (Handles.Button(buttonPosition, _owner.transform.rotation, buttonSize, buttonSize, Handles.DotHandleCap))
+                if (Handles.Button(buttonPosition, _owner.transform.rotation, buttonSize, buttonSize,
+                        Handles.DotHandleCap))
                 {
                     var mid = (pos + prevPosition) / 2f;
                     prevCOffset.vector3Value = _owner.transform.InverseTransformVector(mid - pos);
@@ -199,13 +204,13 @@ namespace geniikw.DataRenderer2D.Editors
             Handles.DrawDottedLine(position, position + _owner.transform.TransformVector(offset.vector3Value), 5f);
 
             EditorGUI.BeginChangeCheck();
-            var pos =  position + _owner.transform.TransformVector(offset.vector3Value);
+            var pos = position + _owner.transform.TransformVector(offset.vector3Value);
             var changedPosition = Handles.DoPositionHandle(pos, _owner.transform.rotation);
             Handles.Label(pos, n + " CP");
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(_owner, "edit offset");
-                offset.vector3Value = _owner.transform.InverseTransformVector(changedPosition - position) ;
+                offset.vector3Value = _owner.transform.InverseTransformVector(changedPosition - position);
                 offset.serializedObject.ApplyModifiedProperties();
             }
         }
@@ -223,7 +228,7 @@ namespace geniikw.DataRenderer2D.Editors
                 position.serializedObject.ApplyModifiedProperties();
             }
         }
-        
+
         private void HandlesAddPointButton()
         {
             ///add button
@@ -232,7 +237,9 @@ namespace geniikw.DataRenderer2D.Editors
             var last = Size == 0 ? Vector3.zero : GetPoint(Size - 1).FindPropertyRelative("position").vector3Value;
 
             if (Size < 2)
+            {
                 direction = Vector3.right;
+            }
             else
             {
                 var last2 = GetPoint(Size - 2).FindPropertyRelative("position").vector3Value;
@@ -241,22 +248,23 @@ namespace geniikw.DataRenderer2D.Editors
 
             var buffer = Handles.color;
             Handles.color = Color.green;
-            
-            if (Handles.Button(_owner.transform.TransformPoint(last + direction *m_distanceBuffer),
-                               _owner.transform.rotation,
-                               m_sizeBuffer,
-                               m_sizeBuffer, 
-                               Handles.DotHandleCap))
+
+            if (Handles.Button(_owner.transform.TransformPoint(last + direction * m_distanceBuffer),
+                    _owner.transform.rotation,
+                    m_sizeBuffer,
+                    m_sizeBuffer,
+                    Handles.DotHandleCap))
             {
                 var index = Size;
 
-           
-                var width = index == 0 ? 1 :  GetPoint(index - 1).FindPropertyRelative("width").floatValue;
+
+                var width = index == 0 ? 1 : GetPoint(index - 1).FindPropertyRelative("width").floatValue;
 
                 _line.FindPropertyRelative("points").InsertArrayElementAtIndex(index);
 
                 var addedPoint = _line.FindPropertyRelative("points").GetArrayElementAtIndex(index);
-                addedPoint.FindPropertyRelative("position").vector3Value = index == 0 ? Vector3.zero : last + direction * m_distanceBuffer;
+                addedPoint.FindPropertyRelative("position").vector3Value =
+                    index == 0 ? Vector3.zero : last + direction * m_distanceBuffer;
                 addedPoint.FindPropertyRelative("previousControlOffset").vector3Value = Vector3.zero;
                 addedPoint.FindPropertyRelative("nextControlOffset").vector3Value = Vector3.zero;
                 addedPoint.FindPropertyRelative("width").floatValue = width;
@@ -268,16 +276,17 @@ namespace geniikw.DataRenderer2D.Editors
             if (Size > 1)
             {
                 Handles.color = Color.black;
-                if (Handles.Button(_owner.transform.TransformPoint(last + direction * m_distanceBuffer * 2), 
-                                   _owner.transform.rotation,
-                                   m_sizeBuffer,
-                                   m_sizeBuffer, 
-                                   Handles.DotHandleCap))
+                if (Handles.Button(_owner.transform.TransformPoint(last + direction * m_distanceBuffer * 2),
+                        _owner.transform.rotation,
+                        m_sizeBuffer,
+                        m_sizeBuffer,
+                        Handles.DotHandleCap))
                 {
                     _line.FindPropertyRelative("points").DeleteArrayElementAtIndex(Size - 1);
                     _target.ApplyModifiedProperties();
                 }
             }
+
             Handles.color = buffer;
         }
     }

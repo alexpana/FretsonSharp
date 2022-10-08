@@ -1,1 +1,169 @@
-{"results":[{"id":1405,"key":"1405","strings":[[{"fretNo":1,"barre":4,"symbol":"1"}],[{"fretNo":1,"barre":true,"symbol":"1"}],[{"fretNo":1,"barre":true,"symbol":"1"}],[{"fretNo":1,"barre":true,"symbol":"1"}],[{"fretNo":1,"barre":true,"symbol":"1"}],[{"fretNo":2,"isRootNote":true,"symbol":"2"}]],"firstFret":1,"variation":1,"realVariation":99,"rootNoteId":6,"typeId":16,"isVariation":true,"shape":"1-1-1-1-1-2"},{"id":1407,"key":"1407","strings":[[{"fretNo":8,"barre":3,"symbol":"1"}],[{"fretNo":9,"symbol":"3"}],[{"fretNo":8,"barre":true,"symbol":"1"}],[{"fretNo":8,"barre":true,"symbol":"1"}],[{"fretNo":9,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":6,"variation":2,"realVariation":99,"rootNoteId":6,"typeId":16,"isVariation":true,"shape":"1-2-1-1-2"},{"id":1406,"key":"1406","strings":[[{"fretNo":13,"barre":4,"symbol":"1"}],[{"fretNo":13,"barre":true,"symbol":"1"}],[{"fretNo":13,"barre":true,"symbol":"1"}],[{"fretNo":13,"barre":true,"symbol":"1"}],[{"fretNo":13,"barre":true,"symbol":"1"}],[{"fretNo":14,"isRootNote":true,"symbol":"2"}]],"firstFret":10,"variation":3,"realVariation":99,"rootNoteId":6,"typeId":16,"isVariation":true,"shape":"1-1-1-1-1-2"}],"message":null}
+{
+  "results": [
+    {
+      "id": 1405,
+      "key": "1405",
+      "strings": [
+        [
+          {
+            "fretNo": 1,
+            "barre": 4,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 1,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 2,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ]
+      ],
+      "firstFret": 1,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 6,
+      "typeId": 16,
+      "isVariation": true,
+      "shape": "1-1-1-1-1-2"
+    },
+    {
+      "id": 1407,
+      "key": "1407",
+      "strings": [
+        [
+          {
+            "fretNo": 8,
+            "barre": 3,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 6,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 6,
+      "typeId": 16,
+      "isVariation": true,
+      "shape": "1-2-1-1-2"
+    },
+    {
+      "id": 1406,
+      "key": "1406",
+      "strings": [
+        [
+          {
+            "fretNo": 13,
+            "barre": 4,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 13,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 14,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ]
+      ],
+      "firstFret": 10,
+      "variation": 3,
+      "realVariation": 99,
+      "rootNoteId": 6,
+      "typeId": 16,
+      "isVariation": true,
+      "shape": "1-1-1-1-1-2"
+    }
+  ],
+  "message": null
+}

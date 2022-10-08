@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace geniikw.DataRenderer2D.Polygon
@@ -8,28 +7,10 @@ namespace geniikw.DataRenderer2D.Polygon
     {
         public PolygonData data;
 
-        public PolygonData Polygon
-        {
-            get
-            {
-                return data;
-            }
-        }
+        protected override IEnumerable<IMesh> DrawerFactory => PolygonFactory.Create(this, this);
 
-        public Vector2 Size
-        {
-            get
-            {
-                return new Vector2(rectTransform.rect.width , rectTransform.rect.height);
-            }
-        }
+        public PolygonData Polygon => data;
 
-        protected override IEnumerable<IMesh> DrawerFactory
-        {
-            get
-            {
-                return PolygonFactory.Create(this,this);
-            }
-        }
+        public Vector2 Size => new Vector2(rectTransform.rect.width, rectTransform.rect.height);
     }
 }

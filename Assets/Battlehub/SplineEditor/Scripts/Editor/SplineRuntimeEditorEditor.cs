@@ -1,12 +1,13 @@
-﻿using UnityEditor;
-using Battlehub.Utils;
+﻿using Battlehub.Utils;
+using UnityEditor;
+
 namespace Battlehub.SplineEditor
 {
     [CustomEditor(typeof(SplineRuntimeEditor))]
     public class SplineRuntimeEditorEditor : Editor
     {
-        SplineRuntimeEditor m_instance;
-        PropertyField[] m_fields;
+        private PropertyField[] m_fields;
+        private SplineRuntimeEditor m_instance;
 
         public void OnEnable()
         {
@@ -16,10 +17,7 @@ namespace Battlehub.SplineEditor
 
         public override void OnInspectorGUI()
         {
-            if (m_instance == null)
-            {
-                return;
-            }
+            if (m_instance == null) return;
 
             DrawDefaultInspector();
             ExposeProperties.Expose(m_fields);

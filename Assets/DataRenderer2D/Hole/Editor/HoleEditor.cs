@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.UI;
+
 namespace geniikw.DataRenderer2D.Hole
 {
     [CustomEditor(typeof(UIHole), true)]
     public class HoleEditor : ImageEditor
     {
-        SerializedProperty m_holeInfo;
-        
+        private SerializedProperty m_holeInfo;
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -19,7 +17,7 @@ namespace geniikw.DataRenderer2D.Hole
 
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.PropertyField(m_holeInfo,true);
+            EditorGUILayout.PropertyField(m_holeInfo, true);
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }

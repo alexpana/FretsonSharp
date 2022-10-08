@@ -22,7 +22,7 @@
 
 // matches rules in UnityCG.cginc:
 #if (SHADER_TARGET < 30) || defined(SHADER_API_MOBILE)
-    #define CALC_FOG_BLEND_FACTOR(coord) float unityFogFactor = coord.x
+#define CALC_FOG_BLEND_FACTOR(coord) float unityFogFactor = coord.x
 #else
     #define CALC_FOG_BLEND_FACTOR(coord) UNITY_CALC_FOG_FACTOR((coord).x)
 #endif
@@ -46,41 +46,41 @@ PROP_DEF(int, _DashSpace) \
 PROP_DEF(int, _DashSnap)
 
 
-
 // parameters for selection outlines
 #ifdef SCENE_VIEW_OUTLINE_MASK
 	int _ObjectId;
 	int _PassValue;
 #endif
 #ifdef SCENE_VIEW_PICKING
-	uniform float4 _SelectionID;
+uniform float4 _SelectionID;
 #endif
 
 #ifdef FOG_ENABLED
     #define SHAPES_OUTPUT(color,mask,i) ShapesOutput(color,mask,i.fogCoord)
 #else
-    #define SHAPES_OUTPUT(color,mask,i) ShapesOutput(color,mask)
+#define SHAPES_OUTPUT(color,mask,i) ShapesOutput(color,mask)
 #endif
 
 // used for the final output. supports branching based on opaque vs transparent and outline functions
 #ifdef FOG_ENABLED
     inline half4 ShapesOutput( half4 shape_color, float shape_mask, float fogCoord ){
 #else
-    inline half4 ShapesOutput( half4 shape_color, float shape_mask ){
-#endif
+inline half4 ShapesOutput(half4 shape_color, float shape_mask)
+{
+    #endif
     half4 outColor = half4(shape_color.rgb, shape_mask * shape_color.a);
 
     #ifdef FOG_ENABLED
-        #if defined(TRANSPARENT) || defined(OPAQUE)
+    #if defined(TRANSPARENT) || defined(OPAQUE)
             UNITY_APPLY_FOG(fogCoord,outColor);
-        #else
+    #else
             // all other blend modes are pretty cursed,
             // so we fade their opacity instead of blending to fog color
             CALC_FOG_BLEND_FACTOR(fogCoord); // defines unityFogFactor
             outColor.a *= saturate(unityFogFactor);
-        #endif
     #endif
-    
+    #endif
+
     clip(outColor.a - VERY_SMOL); // todo: this disallows negative colors, which, might be bad? idk
 
     #ifdef BLEND_FADE_TO_BLACK
@@ -100,15 +100,15 @@ PROP_DEF(int, _DashSnap)
     #ifdef COLORBURN
         outColor.rgb = 1-(1.0/max(VERY_SMOL,outColor.rgb));
     #endif
-    
+
     #if defined(SCENE_VIEW_OUTLINE_MASK) || defined(SCENE_VIEW_PICKING)
-        clip(shape_mask - 0.5 + VERY_SMOL); // Don't take color into account
-    #endif 
-    
+    clip(shape_mask - 0.5 + VERY_SMOL); // Don't take color into account
+    #endif
+
     #if defined( SCENE_VIEW_OUTLINE_MASK )
         return float4(_ObjectId, _PassValue, 1, 1);
     #elif defined( SCENE_VIEW_PICKING )
-        return _SelectionID;
+    return _SelectionID;
     #else
         return outColor; // Render mesh
     #endif

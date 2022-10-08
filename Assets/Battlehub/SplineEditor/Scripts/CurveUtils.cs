@@ -6,46 +6,40 @@ namespace Battlehub.SplineEditor
     {
         public static float GetT(this SplineBase spline, int curveIndex, Vector3 testPoint, float eps = 0.01f)
         {
-            float s1 = 1.0f / spline.CurveCount * curveIndex;
-            float s2 = s1 + 1.0f / spline.CurveCount;
+            var s1 = 1.0f / spline.CurveCount * curveIndex;
+            var s2 = s1 + 1.0f / spline.CurveCount;
 
-            int iter = 0;
-            float result =  GetT(spline, s1, s2, testPoint, ref iter,  eps);
+            var iter = 0;
+            var result = GetT(spline, s1, s2, testPoint, ref iter, eps);
 
             //Debug.Log(iter);
             return result;
-
         }
 
-        private static float GetT(this SplineBase spline, float tStart, float tEnd, Vector3 testPoint, ref int iter, float eps = 0.01f)
+        private static float GetT(this SplineBase spline, float tStart, float tEnd, Vector3 testPoint, ref int iter,
+            float eps = 0.01f)
         {
             iter++;
-            float sqrEps = eps * eps;
-            Vector3 start = spline.GetPoint(tStart);
-            Vector3 end = spline.GetPoint(tEnd);
+            var sqrEps = eps * eps;
+            var start = spline.GetPoint(tStart);
+            var end = spline.GetPoint(tEnd);
 
-            Vector3 toStart = start - testPoint;
-            Vector3 toEnd = end - testPoint;
+            var toStart = start - testPoint;
+            var toEnd = end - testPoint;
             if (toStart.sqrMagnitude < toEnd.sqrMagnitude)
             {
-                if ((end - start).sqrMagnitude <= sqrEps)
-                {
-                    return tStart;
-                }
+                if ((end - start).sqrMagnitude <= sqrEps) return tStart;
                 return spline.GetT(tStart, (tStart + tEnd) / 2.0f, testPoint, ref iter, eps);
             }
 
-            if ((end - start).sqrMagnitude <= sqrEps)
-            {
-                return tEnd;
-            }
+            if ((end - start).sqrMagnitude <= sqrEps) return tEnd;
             return spline.GetT((tStart + tEnd) / 2.0f, tEnd, testPoint, ref iter, eps);
         }
 
         public static Vector3 GetPoint(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
         {
             t = Mathf.Clamp01(t);
-            float oneMinusT = 1f - t;
+            var oneMinusT = 1f - t;
             return
                 oneMinusT * oneMinusT * oneMinusT * p0 +
                 3f * oneMinusT * oneMinusT * t * p1 +
@@ -56,14 +50,11 @@ namespace Battlehub.SplineEditor
         public static Vector3 GetFirstDerivative(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
         {
             t = Mathf.Clamp01(t);
-            float oneMinusT = 1f - t;
+            var oneMinusT = 1f - t;
             return
                 3f * oneMinusT * oneMinusT * (p1 - p0) +
                 6f * oneMinusT * t * (p2 - p1) +
                 3f * t * t * (p3 - p2);
         }
-
-
     }
 }
-

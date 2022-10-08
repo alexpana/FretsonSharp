@@ -1,7 +1,6 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 namespace geniikw.DataRenderer2D
 {
@@ -12,28 +11,23 @@ namespace geniikw.DataRenderer2D
     {
         public bool updateInUpdate = true;
 
-        IEnumerable<IMesh> _mesh;
+        private IEnumerable<IMesh> _mesh;
 
-        IEnumerable<IMesh> Mesh { get { return _mesh ?? (_mesh = MeshFactory); } }
+        private int bufferSize = 100;
+        private Color[] colorBuffer;
 
-        int bufferSize = 100;
-        Vector3[] vBuffer;
-        Vector2[] uvBuffer;
-        Color[] colorBuffer;
-        int[] tBuffer;
+        private bool m_geometryUpdateFlag = false;
 
-        bool m_geometryUpdateFlag = false;
+        private MeshFilter m_mf;
+        private int[] tBuffer;
+        private Vector2[] uvBuffer;
+        private Vector3[] vBuffer;
 
-        abstract protected IEnumerable<IMesh> MeshFactory { get; }
+        private IEnumerable<IMesh> Mesh => _mesh ?? (_mesh = MeshFactory);
 
-        MeshFilter m_mf;
-        MeshFilter Mf
-        {
-            get
-            {
-                return m_mf ?? (m_mf = GetComponent<MeshFilter>());
-            }
-        }
+        protected abstract IEnumerable<IMesh> MeshFactory { get; }
+
+        private MeshFilter Mf => m_mf ?? (m_mf = GetComponent<MeshFilter>());
 
         protected virtual void Awake()
         {
@@ -44,17 +38,14 @@ namespace geniikw.DataRenderer2D
         {
             var mf = GetComponent<MeshFilter>();
 
-            if (mf.sharedMesh == null)
-            {
-                MakeNewMesh();
-            }
+            if (mf.sharedMesh == null) MakeNewMesh();
         }
 
         private void Update()
         {
             m_geometryUpdateFlag = true;
         }
-        
+
         public void LateUpdate()
         {
             if (m_geometryUpdateFlag)
@@ -113,6 +104,7 @@ namespace geniikw.DataRenderer2D
                 colorBuffer[vc] = Color.white;
                 vc++;
             }
+
             while (tc < vBuffer.Length)
             {
                 tBuffer[tc] = 0;
@@ -128,7 +120,7 @@ namespace geniikw.DataRenderer2D
             mf.sharedMesh.RecalculateTangents();
             mf.sharedMesh.RecalculateBounds();
         }
-        
+
         private void AllocateBuffer(int size)
         {
             vBuffer = new Vector3[size];
@@ -136,7 +128,7 @@ namespace geniikw.DataRenderer2D
             colorBuffer = new Color[size];
             tBuffer = new int[size * 6];
         }
-        
+
         private void ExtendBuffer()
         {
             var tempV = vBuffer;
@@ -153,12 +145,10 @@ namespace geniikw.DataRenderer2D
             Array.Copy(tempT, tBuffer, tempT.Length);
         }
 
-        
+
         public void GeometyUpdateFlagUp()
         {
             m_geometryUpdateFlag = true;
         }
-
-
     }
 }

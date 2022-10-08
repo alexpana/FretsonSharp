@@ -1,123 +1,147 @@
-﻿using UnityEngine;
+﻿using System.Linq;
 using UnityEditor;
-using System.Linq;
+using UnityEngine;
 
 // Shapes © Freya Holmér - https://twitter.com/FreyaHolmer/
 // Website & Documentation - https://acegikmo.com/shapes/
-namespace Shapes {
+namespace Shapes
+{
+    [CustomEditor(typeof(Rectangle))]
+    [CanEditMultipleObjects]
+    public class RectangleEditor : ShapeRendererEditor
+    {
+        private DashStyleEditor dashEditor;
+        private SceneFillEditor fillEditor;
+        private readonly SerializedProperty propCornerRadii = null;
+        private readonly SerializedProperty propCornerRadiusMode = null;
+        private readonly SerializedProperty propDashed = null;
+        private readonly SerializedProperty propDashStyle = null;
+        private readonly SerializedProperty propFill = null;
+        private readonly SerializedProperty propHeight = null;
+        private readonly SerializedProperty propMatchDashSpacingToSize = null;
+        private readonly SerializedProperty propPivot = null;
+        private readonly SerializedProperty propThickness = null;
+        private readonly SerializedProperty propThicknessSpace = null;
 
-	[CustomEditor( typeof(Rectangle) )]
-	[CanEditMultipleObjects]
-	public class RectangleEditor : ShapeRendererEditor {
+        private readonly SerializedProperty propType = null;
+        private readonly SerializedProperty propUseFill = null;
+        private readonly SerializedProperty propWidth = null;
+        private SceneRectEditor rectEditor;
 
-		SerializedProperty propType = null;
-		SerializedProperty propCornerRadii = null;
-		SerializedProperty propCornerRadiusMode = null;
-		SerializedProperty propWidth = null;
-		SerializedProperty propHeight = null;
-		SerializedProperty propPivot = null;
-		SerializedProperty propThickness = null;
-		SerializedProperty propThicknessSpace = null;
-		SerializedProperty propFill = null;
-		SerializedProperty propUseFill = null;
-		SerializedProperty propDashStyle = null;
-		SerializedProperty propDashed = null;
-		SerializedProperty propMatchDashSpacingToSize = null;
+        public override void OnEnable()
+        {
+            base.OnEnable();
+            dashEditor = DashStyleEditor.GetDashEditor(propDashStyle, propMatchDashSpacingToSize, propDashed);
+            rectEditor = new SceneRectEditor(this);
+            fillEditor = new SceneFillEditor(this, propFill, propUseFill);
+        }
 
-		DashStyleEditor dashEditor;
-		SceneFillEditor fillEditor;
-		SceneRectEditor rectEditor;
+        private void OnSceneGUI()
+        {
+            var rect = target as Rectangle;
+            var changed = rectEditor.DoSceneHandles(rect);
+            var fill = rect.Fill;
+            changed |= fillEditor.DoSceneHandles(rect.UseFill, rect, ref fill, rect.transform);
+            if (changed)
+            {
+                rect.Fill = fill;
+                rect.UpdateAllMaterialProperties();
+            }
+        }
 
-		public override void OnEnable() {
-			base.OnEnable();
-			dashEditor = DashStyleEditor.GetDashEditor( propDashStyle, propMatchDashSpacingToSize, propDashed );
-			rectEditor = new SceneRectEditor( this );
-			fillEditor = new SceneFillEditor( this, propFill, propUseFill );
-		}
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            BeginProperties();
+            var multiEditing = serializedObject.isEditingMultipleObjects;
 
-		void OnSceneGUI() {
-			Rectangle rect = target as Rectangle;
-			bool changed = rectEditor.DoSceneHandles( rect );
-			GradientFill fill = rect.Fill;
-			changed |= fillEditor.DoSceneHandles( rect.UseFill, rect, ref fill, rect.transform );
-			if( changed ) {
-				rect.Fill = fill;
-				rect.UpdateAllMaterialProperties();
-			}
-		}
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                EditorGUILayout.PrefixLabel("Type");
+                ShapesUI.DrawTypeSwitchButtons(propType, UIAssets.RectTypeButtonContents);
+            }
 
-		public override void OnInspectorGUI() {
-			serializedObject.Update();
-			base.BeginProperties();
-			bool multiEditing = serializedObject.isEditingMultipleObjects;
+            EditorGUILayout.PropertyField(propPivot);
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                EditorGUILayout.PrefixLabel("Size");
+                using (ShapesUI.TempLabelWidth(14))
+                {
+                    EditorGUILayout.PropertyField(propWidth, new GUIContent("X"), GUILayout.MinWidth(20));
+                    EditorGUILayout.PropertyField(propHeight, new GUIContent("Y"), GUILayout.MinWidth(20));
+                }
+            }
 
-			using( new EditorGUILayout.HorizontalScope() ) {
-				EditorGUILayout.PrefixLabel( "Type" );
-				ShapesUI.DrawTypeSwitchButtons( propType, UIAssets.RectTypeButtonContents );
-			}
+            var isBorder = ((Rectangle)target).IsBorder;
+            using (new EditorGUI.DisabledScope(!multiEditing && isBorder == false))
+            {
+                ShapesUI.FloatInSpaceField(propThickness, propThicknessSpace);
+            }
 
-			EditorGUILayout.PropertyField( propPivot );
-			using( new EditorGUILayout.HorizontalScope() ) {
-				EditorGUILayout.PrefixLabel( "Size" );
-				using( ShapesUI.TempLabelWidth( 14 ) ) {
-					EditorGUILayout.PropertyField( propWidth, new GUIContent( "X" ), GUILayout.MinWidth( 20 ) );
-					EditorGUILayout.PropertyField( propHeight, new GUIContent( "Y" ), GUILayout.MinWidth( 20 ) );
-				}
-			}
+            var hasRadius = ((Rectangle)target).IsRounded;
 
-			bool isBorder = ( (Rectangle)target ).IsBorder;
-			using( new EditorGUI.DisabledScope( !multiEditing && isBorder == false ) )
-				ShapesUI.FloatInSpaceField( propThickness, propThicknessSpace );
+            using (new EditorGUI.DisabledScope(hasRadius == false))
+            {
+                EditorGUILayout.PropertyField(propCornerRadiusMode, new GUIContent("Radius Mode"));
+                CornerRadiusProperties();
+            }
 
-			bool hasRadius = ( (Rectangle)target ).IsRounded;
+            rectEditor.GUIEditButton();
 
-			using( new EditorGUI.DisabledScope( hasRadius == false ) ) {
-				EditorGUILayout.PropertyField( propCornerRadiusMode, new GUIContent( "Radius Mode" ) );
-				CornerRadiusProperties();
-			}
+            var hasDashablesInSelection = targets.Any(x => (x as Rectangle).IsBorder);
+            using (new ShapesUI.GroupScope())
+            using (new EditorGUI.DisabledScope(hasDashablesInSelection == false))
+            {
+                dashEditor.DrawProperties();
+            }
 
-			rectEditor.GUIEditButton();
-			
-			bool hasDashablesInSelection = targets.Any( x => ( x as Rectangle ).IsBorder );
-			using( new ShapesUI.GroupScope() )
-				using( new EditorGUI.DisabledScope( hasDashablesInSelection == false ) )
-					dashEditor.DrawProperties();
+            fillEditor.DrawProperties(this);
 
-			fillEditor.DrawProperties( this );
+            EndProperties();
+        }
 
-			base.EndProperties();
-		}
+        private void CornerRadiusProperties()
+        {
+            var radiusMode = (Rectangle.RectangleCornerRadiusMode)propCornerRadiusMode.enumValueIndex;
 
-		void CornerRadiusProperties() {
-			Rectangle.RectangleCornerRadiusMode radiusMode = (Rectangle.RectangleCornerRadiusMode)propCornerRadiusMode.enumValueIndex;
+            if (radiusMode == Rectangle.RectangleCornerRadiusMode.Uniform)
+            {
+                using (var change = new EditorGUI.ChangeCheckScope())
+                {
+                    EditorGUI.showMixedValue = propCornerRadii.hasMultipleDifferentValues;
+                    var newRadius = Mathf.Max(0f, EditorGUILayout.FloatField("Radius", propCornerRadii.vector4Value.x));
+                    EditorGUI.showMixedValue = false;
+                    if (change.changed && newRadius != propCornerRadii.vector4Value.x)
+                        propCornerRadii.vector4Value = new Vector4(newRadius, newRadius, newRadius, newRadius);
+                }
+            }
+            else
+            {
+                // per-corner
+                var components = propCornerRadii.GetVisibleChildren().ToArray();
+                (int component, string label )[] corners = { (1, "↖"), (2, "↗"), (0, "↙"), (3, "↘") };
 
-			if( radiusMode == Rectangle.RectangleCornerRadiusMode.Uniform ) {
-				using( var change = new EditorGUI.ChangeCheckScope() ) {
-					EditorGUI.showMixedValue = propCornerRadii.hasMultipleDifferentValues;
-					float newRadius = Mathf.Max( 0f, EditorGUILayout.FloatField( "Radius", propCornerRadii.vector4Value.x ) );
-					EditorGUI.showMixedValue = false;
-					if( change.changed && newRadius != propCornerRadii.vector4Value.x )
-						propCornerRadii.vector4Value = new Vector4( newRadius, newRadius, newRadius, newRadius );
-				}
-			} else { // per-corner
-				SerializedProperty[] components = propCornerRadii.GetVisibleChildren().ToArray();
-				(int component, string label )[] corners = { ( 1, "↖" ), ( 2, "↗" ), ( 0, "↙" ), ( 3, "↘" ) };
-				void CornerField( string label, int component ) => EditorGUILayout.PropertyField( components[component], new GUIContent( label ), GUILayout.Width( 64 ) );
+                void CornerField(string label, int component)
+                {
+                    EditorGUILayout.PropertyField(components[component], new GUIContent(label), GUILayout.Width(64));
+                }
 
-				void RowFields( string label, int a, int b ) {
-					using( ShapesUI.Horizontal ) {
-						GUILayout.Label( label, GUILayout.Width( EditorGUIUtility.labelWidth ) );
-						using( ShapesUI.TempLabelWidth( 18 ) ) {
-							CornerField( corners[a].label, corners[a].component );
-							CornerField( corners[b].label, corners[b].component );
-						}
-					}
-				}
+                void RowFields(string label, int a, int b)
+                {
+                    using (ShapesUI.Horizontal)
+                    {
+                        GUILayout.Label(label, GUILayout.Width(EditorGUIUtility.labelWidth));
+                        using (ShapesUI.TempLabelWidth(18))
+                        {
+                            CornerField(corners[a].label, corners[a].component);
+                            CornerField(corners[b].label, corners[b].component);
+                        }
+                    }
+                }
 
-				RowFields( "Radii", 0, 1 );
-				RowFields( " ", 2, 3 );
-			}
-		}
-	}
-
+                RowFields("Radii", 0, 1);
+                RowFields(" ", 2, 3);
+            }
+        }
+    }
 }

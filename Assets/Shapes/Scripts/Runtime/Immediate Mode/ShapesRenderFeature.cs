@@ -8,9 +8,9 @@ using UnityEngine.Rendering.Universal;
 
 // Shapes © Freya Holmér - https://twitter.com/FreyaHolmer/
 // Website & Documentation - https://acegikmo.com/shapes/
-namespace Shapes {
-
-	#if SHAPES_URP
+namespace Shapes
+{
+#if SHAPES_URP
 	public class ShapesRenderFeature : ScriptableRendererFeature {
 
 		public override void Create() => _ = 0; // called once per camera
@@ -25,6 +25,5 @@ namespace Shapes {
 		}
 
 	}
-	#endif
-
+#endif
 }

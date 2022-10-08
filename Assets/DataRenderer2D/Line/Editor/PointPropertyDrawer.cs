@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Text.RegularExpressions;
 using UnityEditor;
-using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace geniikw.DataRenderer2D.Editors
 {
@@ -24,8 +22,8 @@ namespace geniikw.DataRenderer2D.Editors
             var labelPos = position;
             labelPos.x = 0f;
 
-            EditorGUI.LabelField(labelPos, (Regex.Match(label.text, @"\d+").Value).ToString());
-           
+            EditorGUI.LabelField(labelPos, Regex.Match(label.text, @"\d+").Value);
+
             var pos = position;
             pos.height = EditorGUIUtility.singleLineHeight;
             if (!EditorSetting.Get.onlyViewWidth)
@@ -38,11 +36,11 @@ namespace geniikw.DataRenderer2D.Editors
 
                 EditorGUI.PropertyField(pos, sp.NextOffset());
                 pos.y += EditorGUIUtility.singleLineHeight;
-                
+
 
                 EditorGUI.PropertyField(pos, sp.PrevOffset());
                 pos.y += EditorGUIUtility.singleLineHeight;
-                
+
                 pos.height /= 2f;
                 EditorGUI.DrawRect(pos, Color.black);
             }
@@ -51,22 +49,25 @@ namespace geniikw.DataRenderer2D.Editors
                 EditorGUI.PropertyField(pos, sp.Width());
             }
         }
- 
     }
-    static class SerializedPropertyAccessor
+
+    internal static class SerializedPropertyAccessor
     {
         public static SerializedProperty Position(this SerializedProperty sp)
         {
             return sp.FindPropertyRelative("position");
         }
+
         public static SerializedProperty PrevOffset(this SerializedProperty sp)
         {
             return sp.FindPropertyRelative("previousControlOffset");
         }
+
         public static SerializedProperty NextOffset(this SerializedProperty sp)
         {
             return sp.FindPropertyRelative("nextControlOffset");
         }
+
         public static SerializedProperty Width(this SerializedProperty sp)
         {
             return sp.FindPropertyRelative("width");

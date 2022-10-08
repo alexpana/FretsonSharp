@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
 
 namespace geniikw.DataRenderer2D.Hole.Editor
 {
@@ -25,13 +23,12 @@ namespace geniikw.DataRenderer2D.Hole.Editor
             uiline.hole.SizeY = 0.5f;
             uiline.hole.Color = Color.white;
             uiline.hole.Inner = 3;
-            
+
 
             uiline.transform.SetParent(canvas.transform);
             uiline.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
 
             Selection.activeObject = linego;
         }
-       
     }
 }

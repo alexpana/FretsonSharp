@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-
 
 namespace Battlehub.SplineEditor
 {
@@ -8,24 +6,15 @@ namespace Battlehub.SplineEditor
     {
         public GameObject ExplosionPrefab;
 
-        public void Destroy()
-        {
-            Destroy(gameObject);
-        }
-
         private void Update()
         {
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                if(Physics.Raycast(ray, out hit))
-                {
-                    if(hit.transform == transform)
-                    {
+                if (Physics.Raycast(ray, out hit))
+                    if (hit.transform == transform)
                         Explode();
-                    }
-                }
             }
         }
 
@@ -34,11 +23,16 @@ namespace Battlehub.SplineEditor
             Explode();
         }
 
+        public void Destroy()
+        {
+            Destroy(gameObject);
+        }
+
         private void Explode()
         {
             if (ExplosionPrefab != null)
             {
-                GameObject explosion = (GameObject)Instantiate(ExplosionPrefab, transform.position, transform.rotation);
+                var explosion = Instantiate(ExplosionPrefab, transform.position, transform.rotation);
                 Destroy(explosion, 3.0f);
             }
 
@@ -47,4 +41,3 @@ namespace Battlehub.SplineEditor
         }
     }
 }
-

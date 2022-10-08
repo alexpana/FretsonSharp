@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
+
 namespace geniikw.DataRenderer2D.Signal.Editors
 {
     public static class MenuExtender

@@ -1,32 +1,22 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
-using Battlehub.UIControls;
-using System;
 using System.Linq;
+using Battlehub.UIControls;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace Battlehub.RTEditor
 {
     public class RuntimePrefabs : MonoBehaviour
     {
         public GameObject ListBoxPrefab;
-        private ListBox m_listBox;
-        public Type TypeCriteria = typeof(GameObject);
         public RuntimeEditor Editor;
-        //public Texture2D DragDropIcon;
+        private ListBox m_listBox;
 
-        public static bool IsPrefab(Transform This)
-        {
-            #if UNITY_EDITOR
-            return UnityEditor.PrefabUtility.GetPrefabType(This.gameObject) == UnityEditor.PrefabType.Prefab;
-            #else
-            if (Application.isEditor && !Application.isPlaying)
-            {
-                throw new InvalidOperationException("Does not work in edit mode");
-            }
-            return This.gameObject.scene.buildIndex < 0;
-            #endif
-        }
+        private bool m_lockSelection;
+        public Type TypeCriteria = typeof(GameObject);
 
         private void Start()
         {
@@ -52,41 +42,31 @@ namespace Battlehub.RTEditor
 
             RuntimeSelection.SelectionChanged += OnRuntimeSelectionChanged;
 #if UNITY_EDITOR
-            UnityEditor.Selection.selectionChanged += OnEditorSelectionChanged;
+            Selection.selectionChanged += OnEditorSelectionChanged;
 #endif
 
-            if(Editor != null)
+            if (Editor != null)
             {
-                if(Editor.Prefabs != null)
-                {
-                    for (int i = 0; i < Editor.Prefabs.Length; ++i)
+                if (Editor.Prefabs != null)
+                    for (var i = 0; i < Editor.Prefabs.Length; ++i)
                     {
-                        GameObject prefab = Editor.Prefabs[i];
+                        var prefab = Editor.Prefabs[i];
                         if (prefab != null)
-                        {
                             if (!prefab.GetComponent<ExposeToEditor>())
-                            {
                                 prefab.AddComponent<ExposeToEditor>();
-                            }
-
-                        }
                     }
-                }
-              
+
                 m_listBox.Items = Editor.Prefabs;
             }
 
-         
+
             ExposeToEditor.Destroyed += OnObjectDestroyed;
         }
 
 
         private void OnDestroy()
         {
-            if (!m_listBox)
-            {
-                return;
-            }
+            if (!m_listBox) return;
             m_listBox.ItemDataBinding -= OnItemDataBinding;
             m_listBox.SelectionChanged -= OnSelectionChanged;
             m_listBox.ItemsRemoved -= OnItemsRemoved;
@@ -96,7 +76,7 @@ namespace Battlehub.RTEditor
 
             RuntimeSelection.SelectionChanged -= OnRuntimeSelectionChanged;
 #if UNITY_EDITOR
-            UnityEditor.Selection.selectionChanged -= OnEditorSelectionChanged;
+            Selection.selectionChanged -= OnEditorSelectionChanged;
 #endif
 
             ExposeToEditor.Destroyed -= OnObjectDestroyed;
@@ -106,42 +86,49 @@ namespace Battlehub.RTEditor
         {
             ExposeToEditor.Destroyed -= OnObjectDestroyed;
         }
+        //public Texture2D DragDropIcon;
 
-        private bool m_lockSelection;
+        public static bool IsPrefab(Transform This)
+        {
+#if UNITY_EDITOR
+            return PrefabUtility.GetPrefabType(This.gameObject) == PrefabType.Prefab;
+#else
+            if (Application.isEditor && !Application.isPlaying)
+            {
+                throw new InvalidOperationException("Does not work in edit mode");
+            }
+            return This.gameObject.scene.buildIndex < 0;
+#endif
+        }
+
         private void OnEditorSelectionChanged()
         {
-            if (m_lockSelection)
-            {
-                return;
-            }
+            if (m_lockSelection) return;
             m_lockSelection = true;
 
 #if UNITY_EDITOR
-            RuntimeSelection.activeObject = UnityEditor.Selection.activeGameObject;
-            RuntimeSelection.objects = UnityEditor.Selection.objects;
-            m_listBox.SelectedItems = UnityEditor.Selection.gameObjects;
+            RuntimeSelection.activeObject = Selection.activeGameObject;
+            RuntimeSelection.objects = Selection.objects;
+            m_listBox.SelectedItems = Selection.gameObjects;
 #endif
 
             m_lockSelection = false;
         }
 
-        private void OnRuntimeSelectionChanged(UnityEngine.Object[] unselected)
+        private void OnRuntimeSelectionChanged(Object[] unselected)
         {
-            if (m_lockSelection)
-            {
-                return;
-            }
+            if (m_lockSelection) return;
             m_lockSelection = true;
 
 #if UNITY_EDITOR
             if (RuntimeSelection.objects == null)
             {
-                UnityEditor.Selection.objects = new UnityEngine.Object[0];
+                Selection.objects = new Object[0];
             }
             else
             {
-                UnityEditor.Selection.activeObject = RuntimeSelection.activeObject;
-                UnityEditor.Selection.objects = RuntimeSelection.objects;
+                Selection.activeObject = RuntimeSelection.activeObject;
+                Selection.objects = RuntimeSelection.objects;
             }
 #endif
             m_listBox.SelectedItems = RuntimeSelection.gameObjects;
@@ -156,20 +143,14 @@ namespace Battlehub.RTEditor
 
         private void OnListBoxSelectionChanged(IEnumerable oldItems, IEnumerable newItems)
         {
-            if (m_lockSelection)
-            {
-                return;
-            }
+            if (m_lockSelection) return;
 
             m_lockSelection = true;
 
-            if (newItems == null)
-            {
-                newItems = new GameObject[0];
-            }
+            if (newItems == null) newItems = new GameObject[0];
 
 #if UNITY_EDITOR
-           UnityEditor.Selection.objects = newItems.OfType<GameObject>().ToArray();
+            Selection.objects = newItems.OfType<GameObject>().ToArray();
 #endif
             RuntimeSelection.objects = newItems.OfType<GameObject>().ToArray();
 
@@ -178,72 +159,56 @@ namespace Battlehub.RTEditor
 
         private void OnItemsRemoved(object sender, ItemsRemovedArgs e)
         {
-            for (int i = 0; i < e.Items.Length; ++i)
+            for (var i = 0; i < e.Items.Length; ++i)
             {
-                GameObject go = (GameObject)e.Items[i];
-                if (go != null)
-                {
-                    Destroy(go);
-                }
+                var go = (GameObject)e.Items[i];
+                if (go != null) Destroy(go);
             }
         }
 
         private void OnItemDataBinding(object sender, ItemDataBindingArgs e)
         {
-            GameObject dataItem = e.Item as GameObject;
+            var dataItem = e.Item as GameObject;
             if (dataItem != null)
             {
-                Text text = e.ItemPresenter.GetComponentInChildren<Text>(true);
+                var text = e.ItemPresenter.GetComponentInChildren<Text>(true);
                 text.text = dataItem.name;
             }
         }
 
         private void OnItemBeginDrag(object sender, ItemDragArgs e)
         {
-
             //Cursor.SetCursor(DragDropIcon, Vector2.zero, CursorMode.Auto);
         }
 
         private void OnItemDrop(object sender, ItemDropArgs e)
         {
-            Transform dropT = ((GameObject)e.DropTarget).transform;
+            var dropT = ((GameObject)e.DropTarget).transform;
             if (e.Action == ItemDropAction.SetLastChild)
-            {
-                for (int i = 0; i < e.DragItems.Length; ++i)
+                for (var i = 0; i < e.DragItems.Length; ++i)
                 {
-                    Transform dragT = ((GameObject)e.DragItems[i]).transform;
+                    var dragT = ((GameObject)e.DragItems[i]).transform;
                     dragT.SetParent(dropT, true);
                     dragT.SetAsLastSibling();
                 }
-            }
             else if (e.Action == ItemDropAction.SetNextSibling)
-            {
-                for (int i = 0; i < e.DragItems.Length; ++i)
+                for (var i = 0; i < e.DragItems.Length; ++i)
                 {
-                    Transform dragT = ((GameObject)e.DragItems[i]).transform;
-                    if (dragT.parent != dropT.parent)
-                    {
-                        dragT.SetParent(dropT.parent, true);
-                    }
+                    var dragT = ((GameObject)e.DragItems[i]).transform;
+                    if (dragT.parent != dropT.parent) dragT.SetParent(dropT.parent, true);
 
-                    int siblingIndex = dropT.GetSiblingIndex();
+                    var siblingIndex = dropT.GetSiblingIndex();
                     dragT.SetSiblingIndex(siblingIndex + 1);
                 }
-            }
             else if (e.Action == ItemDropAction.SetPrevSibling)
-            {
-                for (int i = 0; i < e.DragItems.Length; ++i)
+                for (var i = 0; i < e.DragItems.Length; ++i)
                 {
-                    Transform dragT = ((GameObject)e.DragItems[i]).transform;
-                    if (dragT.parent != dropT.parent)
-                    {
-                        dragT.SetParent(dropT.parent, true);
-                    }
+                    var dragT = ((GameObject)e.DragItems[i]).transform;
+                    if (dragT.parent != dropT.parent) dragT.SetParent(dropT.parent, true);
 
-                    int siblingIndex = dropT.GetSiblingIndex();
+                    var siblingIndex = dropT.GetSiblingIndex();
                     dragT.SetSiblingIndex(siblingIndex);
                 }
-            }
         }
 
         private void OnItemEndDrag(object sender, ItemDragArgs e)
@@ -256,5 +221,4 @@ namespace Battlehub.RTEditor
             m_listBox.Remove(obj.gameObject);
         }
     }
-
 }

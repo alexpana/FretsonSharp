@@ -5,9 +5,10 @@ namespace Battlehub.UIControls
     public class ListBoxItem : ItemContainer
     {
         private Toggle m_toggle;
+
         public override bool IsSelected
         {
-            get { return base.IsSelected; }
+            get => base.IsSelected;
             set
             {
                 if (base.IsSelected != value)

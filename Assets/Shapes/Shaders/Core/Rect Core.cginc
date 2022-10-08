@@ -31,71 +31,75 @@ UNITY_INSTANCING_BUFFER_END(Props)
 #define IP_pxCoverage intp2.y
 #define IP_pxPerMeter intp2.z
 
-struct VertexInput {
+struct VertexInput
+{
     float4 vertex : POSITION;
-	UNITY_VERTEX_INPUT_INSTANCE_ID
+    UNITY_VERTEX_INPUT_INSTANCE_ID
 };
-struct VertexOutput {
+
+struct VertexOutput
+{
     float4 pos : SV_POSITION;
-	SHAPES_INTERPOLATOR_FILL(0)
+    SHAPES_INTERPOLATOR_FILL(0)
     half4 intp0 : TEXCOORD1;
     half4 intp1 : TEXCOORD2;
     #if defined(BORDERED) || defined(CORNER_RADIUS)
         half3 intp2 : TEXCOORD3;
     #endif
-	UNITY_FOG_COORDS(4)
-	UNITY_VERTEX_INPUT_INSTANCE_ID
-	UNITY_VERTEX_OUTPUT_STEREO
+    UNITY_FOG_COORDS(4)
+    UNITY_VERTEX_INPUT_INSTANCE_ID
+    UNITY_VERTEX_OUTPUT_STEREO
 };
 
-VertexOutput vert (VertexInput v) {
-	UNITY_SETUP_INSTANCE_ID(v);
+VertexOutput vert(VertexInput v)
+{
+    UNITY_SETUP_INSTANCE_ID(v);
     VertexOutput o = (VertexOutput)0;
-	UNITY_TRANSFER_INSTANCE_ID(v, o);
-	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-	
-	half4 rect = PROP(_Rect);
-	int scaleMode = PROP(_ScaleMode);
-	half2 objScale = GetObjectScaleXY();
-	bool useUniformScale = scaleMode == SCALE_MODE_UNIFORM;
-	half2 rectScale = useUniformScale ? 1 : objScale;
-	
+    UNITY_TRANSFER_INSTANCE_ID(v, o);
+    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-	#ifdef BORDERED
+    half4 rect = PROP(_Rect);
+    int scaleMode = PROP(_ScaleMode);
+    half2 objScale = GetObjectScaleXY();
+    bool useUniformScale = scaleMode == SCALE_MODE_UNIFORM;
+    half2 rectScale = useUniformScale ? 1 : objScale;
+
+
+    #ifdef BORDERED
 		half scaleThickness = useUniformScale ? (objScale.x+objScale.y)/2 : 1;
 		half thickness = PROP(_Thickness) * scaleThickness;
 		half thicknessSpace = PROP(_ThicknessSpace);
-	#else
-		half thickness = 1; 
-		half thicknessSpace = THICKN_SPACE_METERS;
-	#endif
+    #else
+    half thickness = 1;
+    half thicknessSpace = THICKN_SPACE_METERS;
+    #endif
 
-	// needed for LAA padding, even if not hollow
-	float3 localCenter = float3( rect.xy + rect.zw/2, 0 );
-	LineWidthData wd = GetScreenSpaceWidthDataSimple( LocalToWorldPos(localCenter), CAM_UP, thickness, thicknessSpace );
-	
-	#if defined(BORDERED)
+    // needed for LAA padding, even if not hollow
+    float3 localCenter = float3(rect.xy + rect.zw / 2, 0);
+    LineWidthData wd = GetScreenSpaceWidthDataSimple(LocalToWorldPos(localCenter), CAM_UP, thickness, thicknessSpace);
+
+    #if defined(BORDERED)
 		o.IP_pxPerMeter = wd.pxPerMeter;
 		o.IP_pxCoverage = saturate(wd.thicknessPixelsTarget);
 		o.IP_thickness = wd.thicknessMeters / scaleThickness;
-	#endif
-	
-	#if defined(BORDERED) || defined(CORNER_RADIUS)
+    #endif
+
+    #if defined(BORDERED) || defined(CORNER_RADIUS)
 	    o.IP_nrmCoord = v.vertex.xy;
-	#endif
+    #endif
 
-	rect *= rectScale.xyxy;
-	o.IP_rect = rect;
+    rect *= rectScale.xyxy;
+    o.IP_rect = rect;
 
-	half2 padScale = scaleMode == SCALE_MODE_UNIFORM ? objScale : 1;
-	half2 padding = AA_PADDING_PX / (wd.pxPerMeter * padScale);
+    half2 padScale = scaleMode == SCALE_MODE_UNIFORM ? objScale : 1;
+    half2 padding = AA_PADDING_PX / (wd.pxPerMeter * padScale);
 
-    o.IP_uv0 = Remap( half2(-1, -1), half2(1, 1), -rect.zw/2-padding.xy, rect.zw/2 + padding.xy, v.vertex.xy );
-	v.vertex.xy = Remap( half2(-1, -1), half2(1, 1), rect.xy - padding.xy, rect.xy + rect.zw + padding.xy, v.vertex.xy );
-	v.vertex.xy /= rectScale;
-    o.pos = UnityObjectToClipPos( v.vertex );
-	UNITY_TRANSFER_FOG(o,o.pos);
-	o.fillCoords = GetFillCoords( v.vertex.xyz );
+    o.IP_uv0 = Remap(half2(-1, -1), half2(1, 1), -rect.zw / 2 - padding.xy, rect.zw / 2 + padding.xy, v.vertex.xy);
+    v.vertex.xy = Remap(half2(-1, -1), half2(1, 1), rect.xy - padding.xy, rect.xy + rect.zw + padding.xy, v.vertex.xy);
+    v.vertex.xy /= rectScale;
+    o.pos = UnityObjectToClipPos(v.vertex);
+    UNITY_TRANSFER_FOG(o, o.pos);
+    o.fillCoords = GetFillCoords(v.vertex.xyz);
     return o;
 }
 
@@ -113,11 +117,11 @@ int GetQuadrant( float2 v ) {
 }
 
 inline int GetLocalSector( float2 relVec ) {
-	#ifdef CORNER_RADIUS
+#ifdef CORNER_RADIUS
 	if( relVec.x > 0 && relVec.y > 0 )
 		return 1;
 	else
-	#endif
+#endif
 		return relVec.x - relVec.y > 0 ? 0 : 2;
 }
 
@@ -152,7 +156,7 @@ inline void GetPerimeterDistance( VertexOutput i, out float perimeterDistance, o
 			totalPerimeter = edgePerimeters[quadrant];
 			perimeterDistance = arcLengths[quadrant]/2 - r + size.x/2 - p.x;
 		}
-		#ifdef CORNER_RADIUS
+#ifdef CORNER_RADIUS
 		else if( localSector == 1 ) {
 			// if x < y, then, 0 at arc center + edge dist
 			// if x > y, then, 1 at arc center + previous arc+edge dist
@@ -164,7 +168,7 @@ inline void GetPerimeterDistance( VertexOutput i, out float perimeterDistance, o
 				perimeterDistance = totalPerimeter - arcLengths[quadrant]/2 + DirToAng( relVec ) * r;
 			}
 		}
-		#endif
+#endif
 	} else {
 		totalPerimeter = quadrPerimeters.x + quadrPerimeters.y + quadrPerimeters.z + quadrPerimeters.w;
 		perimeterDistance = snapEndToEnd ? 0 : dot( quadrant >= uint3(1,2,3), quadrPerimeters.xyz ); // all previous quadrants
@@ -172,10 +176,10 @@ inline void GetPerimeterDistance( VertexOutput i, out float perimeterDistance, o
 			perimeterDistance += p.y;
 		else if( localSector == 2 )
 			perimeterDistance += quadrPerimeters[quadrant] - p.x;
-		#ifdef CORNER_RADIUS
+#ifdef CORNER_RADIUS
 		else if(localSector == 1)
 			perimeterDistance += size.y / 2 - r + DirToAng( relVec ) * r; // add max y dist + arcLen
-		#endif
+#endif
 	}
 	
 }
@@ -191,10 +195,11 @@ inline void ApplyDashes( inout half mask, VertexOutput i, half4 radii, half tRad
 }
 #endif
 
-FRAG_OUTPUT_V4 frag( VertexOutput i ) : SV_Target {
-	UNITY_SETUP_INSTANCE_ID(i);
-	
-	#ifdef CORNER_RADIUS
+FRAG_OUTPUT_V4 frag(VertexOutput i) : SV_Target
+{
+    UNITY_SETUP_INSTANCE_ID(i);
+
+    #ifdef CORNER_RADIUS
 	    half4 cornerRadii = PROP(_CornerRadii);
 	    fixed2 sgn = sign(i.IP_nrmCoord);
 	    half maxRadius = min(i.IP_rect.z, i.IP_rect.w) / 2;
@@ -202,39 +207,39 @@ FRAG_OUTPUT_V4 frag( VertexOutput i ) : SV_Target {
 		int rComp = sgn.x-0.5*sgn.x*sgn.y+1.5; // thanks @khyperia <3
 	    half cornerRadius = cornerRadii[rComp];
     #else
-		half4 cornerRadii = half4(0,0,0,0);
-	#endif
-	
-	// base sdf
-	#ifdef CORNER_RADIUS
+    half4 cornerRadii = half4(0, 0, 0, 0);
+    #endif
+
+    // base sdf
+    #ifdef CORNER_RADIUS
         half2 indentBoxSize = (i.IP_rect.zw - cornerRadius.xx*2);
         half boxSdf = SdfBox( i.IP_uv0.xy, indentBoxSize/2 ) - cornerRadius;
     #else
-        half boxSdf = SdfBox( i.IP_uv0.xy, i.IP_rect.zw/2 );
+    half boxSdf = SdfBox(i.IP_uv0.xy, i.IP_rect.zw / 2);
     #endif
-    
+
     // apply border to sdf
     #ifdef BORDERED
 	    half thickness = i.IP_thickness;
         half halfthick = thickness / 2;
 		half boxSdfPreAbs = boxSdf;
 		boxSdf = abs(boxSdf + halfthick) - halfthick;
-	    #if LOCAL_ANTI_ALIASING_QUALITY > 0
+    #if LOCAL_ANTI_ALIASING_QUALITY > 0
             half boxSdfPd = PD( boxSdf ); // todo: this has minor artifacts on inner corners, might want to separate masks by axis
             half shape_mask = 1.0-StepThresholdPD( boxSdf, boxSdfPd );
-        #else
+    #else
             half shape_mask = 1-StepAA(boxSdf);
-        #endif
+    #endif
 
 		// DASHES
 		ApplyDashes(/*inout*/ shape_mask, i, cornerRadii, 1+boxSdfPreAbs/thickness );
 	
 		shape_mask *= i.IP_pxCoverage;
-	#else
-        half shape_mask = 1.0-StepAA( boxSdf );
+    #else
+    half shape_mask = 1.0 - StepAA(boxSdf);
     #endif
-    
-	half4 shape_color = GetFillColor( i.fillCoords );
-	
-	return SHAPES_OUTPUT( shape_color, shape_mask, i );
+
+    half4 shape_color = GetFillColor(i.fillCoords);
+
+    return SHAPES_OUTPUT(shape_color, shape_mask, i);
 }

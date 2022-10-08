@@ -1,0 +1,19 @@
+{
+  "name": "Fretson.Core",
+  "rootNamespace": "",
+  "references": [
+    "Manabreak.Core",
+    "Unity.TextMeshPro",
+    "DOTween.Modules",
+    "DataRenderer2D"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

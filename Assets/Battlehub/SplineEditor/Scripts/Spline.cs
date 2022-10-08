@@ -8,48 +8,50 @@ namespace Battlehub.SplineEditor
         private const float Mag = 5.0f;
 
         /// <summary>
-        /// Append curve
+        ///     Append curve
         /// </summary>
         public void Append()
         {
             AppendCurve(Mag, false);
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             TrackVersion();
-            #endif
+#endif
         }
 
         public void AppendThorugh(Transform t)
         {
-            int pointsCount = 3;
-            Vector3[] points = new Vector3[pointsCount];
+            var pointsCount = 3;
+            var points = new Vector3[pointsCount];
             AlignWithEnding(points, CurveCount - 1, Mag);
 
-            Vector3 from = GetPointLocal(1.0f);
-            Vector3 pt = transform.InverseTransformPoint(t.position - t.forward);
+            var from = GetPointLocal(1.0f);
+            var pt = transform.InverseTransformPoint(t.position - t.forward);
             points[2] = pt;
-            points[1] = pt - transform.InverseTransformVector(t.forward).normalized * (pt - from).magnitude * (1.0f / 3.0f);
-            points[0] = pt - transform.InverseTransformVector(t.forward).normalized * (pt - from).magnitude * (2.0f / 3.0f);
+            points[1] = pt - transform.InverseTransformVector(t.forward).normalized * (pt - from).magnitude *
+                (1.0f / 3.0f);
+            points[0] = pt - transform.InverseTransformVector(t.forward).normalized * (pt - from).magnitude *
+                (2.0f / 3.0f);
 
             AppendCurve(points, false);
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             TrackVersion();
-            #endif
+#endif
         }
 
         /// <summary>
-        /// Insert curve
+        ///     Insert curve
         /// </summary>
         /// <param name="curveIndex">[0, CurveCount]</param>
         public void Insert(int curveIndex)
         {
             PrependCurve(Mag, curveIndex, false, true);
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             TrackVersion();
-            #endif
+#endif
         }
 
         /// <summary>
-        /// Prepend curve
+        ///     Prepend curve
         /// </summary>
         public void Prepend()
         {
@@ -62,9 +64,9 @@ namespace Battlehub.SplineEditor
             {
                 AppendCurve(Mag, false);
             }
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             TrackVersion();
-            #endif
+#endif
         }
 
         public void PrependThrough(Transform t)
@@ -73,14 +75,16 @@ namespace Battlehub.SplineEditor
             {
                 const int curveIndex = 0;
                 const int pointsCount = 3;
-                Vector3[] points = new Vector3[pointsCount];
+                var points = new Vector3[pointsCount];
                 AlignWithBeginning(points, curveIndex, Mag);
 
-                Vector3 from = GetPointLocal(0.0f);
-                Vector3 pt = transform.InverseTransformPoint(t.position + t.forward);
+                var from = GetPointLocal(0.0f);
+                var pt = transform.InverseTransformPoint(t.position + t.forward);
                 points[0] = pt;
-                points[1] = pt + transform.InverseTransformVector(t.forward).normalized * (pt - from).magnitude * (1.0f / 3.0f);
-                points[2] = pt + transform.InverseTransformVector(t.forward).normalized * (pt - from).magnitude * (2.0f / 3.0f);
+                points[1] = pt + transform.InverseTransformVector(t.forward).normalized * (pt - from).magnitude *
+                    (1.0f / 3.0f);
+                points[2] = pt + transform.InverseTransformVector(t.forward).normalized * (pt - from).magnitude *
+                    (2.0f / 3.0f);
 
                 PrependCurve(points, curveIndex, Mag, false, false);
             }
@@ -88,53 +92,53 @@ namespace Battlehub.SplineEditor
             {
                 AppendThorugh(t);
             }
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             TrackVersion();
-            #endif
+#endif
         }
 
         /// <summary>
-        /// Remove by curveIndex
+        ///     Remove by curveIndex
         /// </summary>
         /// <param name="curveIndex">[0, CurveCount - 1]</param>
         /// <returns></returns>
         public bool Remove(int curveIndex)
         {
-            bool result = RemoveCurve(curveIndex);
-            
-            #if UNITY_EDITOR
+            var result = RemoveCurve(curveIndex);
+
+#if UNITY_EDITOR
             TrackVersion();
-            #endif
+#endif
 
             return result;
         }
 
         /// <summary>
-        /// Load from snapshot
+        ///     Load from snapshot
         /// </summary>
         /// <param name="snapshot">snapshot</param>
         public override void Load(SplineSnapshot snapshot)
         {
             LoadSpline(snapshot);
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             TrackVersion();
-            #endif
+#endif
         }
 
         protected override void OnCurveChanged()
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             TrackVersion();
-            #endif
+#endif
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         protected override void AwakeOverride()
         {
             TrackVersion();
         }
-        #endif
+#endif
 
         protected override float GetMag()
         {
@@ -143,8 +147,8 @@ namespace Battlehub.SplineEditor
 
         private void AppendCurve(float mag, bool enforceNeighbour)
         {
-            int pointsCount = 3;
-            Vector3[] points = new Vector3[pointsCount];
+            var pointsCount = 3;
+            var points = new Vector3[pointsCount];
             AlignWithEnding(points, CurveCount - 1, mag);
             AppendCurve(points, enforceNeighbour);
         }
@@ -152,23 +156,18 @@ namespace Battlehub.SplineEditor
         private void PrependCurve(float mag, int curveIndex, bool enforceNeighbour, bool shrinkPreceding)
         {
             const int pointsCount = 3;
-            Vector3[] points = new Vector3[pointsCount];
-            if (!shrinkPreceding)
-            {
-                AlignWithBeginning(points, curveIndex, mag);
-            }
+            var points = new Vector3[pointsCount];
+            if (!shrinkPreceding) AlignWithBeginning(points, curveIndex, mag);
 
             PrependCurve(points, curveIndex, mag, enforceNeighbour, shrinkPreceding);
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private void TrackVersion()
         {
             PersistentVersions[0]++;
             OnVersionChanged();
         }
-        #endif
-
+#endif
     }
 }
-

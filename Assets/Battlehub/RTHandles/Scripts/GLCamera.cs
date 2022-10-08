@@ -3,9 +3,8 @@ using UnityEngine.Rendering;
 
 namespace Battlehub.RTHandles
 {
-
     /// <summary>
-    /// Camera behavior for GL. rendering
+    ///     Camera behavior for GL. rendering
     /// </summary>
     [ExecuteInEditMode]
     public class GLCamera : MonoBehaviour
@@ -29,26 +28,20 @@ namespace Battlehub.RTHandles
 #endif
         }
 
+        private void OnPostRender()
+        {
+            if (GLRenderer.Instance != null) GLRenderer.Instance.Draw();
+        }
+
 #if UNITY_2019_1_OR_NEWER
         private void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
         {
             if (m_camera == camera)
             {
                 Camera.SetupCurrent(camera);
-                if (GLRenderer.Instance != null)
-                {
-                    GLRenderer.Instance.Draw();
-                }
+                if (GLRenderer.Instance != null) GLRenderer.Instance.Draw();
             }
         }
 #endif
-
-        private void OnPostRender()
-        {
-            if (GLRenderer.Instance != null)
-            {
-                GLRenderer.Instance.Draw();
-            }
-        }
     }
 }

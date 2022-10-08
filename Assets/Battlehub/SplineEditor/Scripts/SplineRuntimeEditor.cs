@@ -1,157 +1,121 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Linq;
-
 using Battlehub.RTEditor;
 using Battlehub.RTHandles;
-using Battlehub.Utils;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Rendering;
+using Object = UnityEngine.Object;
 
 namespace Battlehub.SplineEditor
 {
     [ExecuteInEditMode]
     public class SplineRuntimeEditor : MonoBehaviour
     {
-        public static event EventHandler Created;
-        public static event EventHandler Destroyed;
-
-        public Camera Camera;
-        public float SelectionMargin = 20;
         public static readonly Color MirroredModeColor = Color.red;
         public static readonly Color AlignedModeColor = Color.blue;
         public static readonly Color FreeModeColor = Color.yellow;
         public static readonly Color ControlPointLineColor = Color.gray;
 
-        private Material m_connectedMaterial;
-        private Material m_normalMaterial;
-        private Material m_mirroredModeMaterial;
-        private Material m_alignedModeMaterial;
-        private Material m_freeModeMaterial;
-        private Mesh m_controlPointMesh;
+        public Camera Camera;
+        public float SelectionMargin = 20;
 
         private bool m_isApplicationQuit;
 
-        public Mesh ControlPointMesh
-        {
-            get { return m_controlPointMesh; }
-        }
+        public Mesh ControlPointMesh { get; private set; }
 
-        public Material ConnectedMaterial
-        {
-            get { return m_connectedMaterial; }
-        }
+        public Material ConnectedMaterial { get; private set; }
 
-        public Material MirroredModeMaterial
-        {
-            get { return m_mirroredModeMaterial; }
-        }
+        public Material MirroredModeMaterial { get; private set; }
 
-        public Material AlignedModeMaterial
-        {
-            get { return m_alignedModeMaterial; }
-        }
+        public Material AlignedModeMaterial { get; private set; }
 
-        public Material FreeModeMaterial
-        {
-            get { return m_freeModeMaterial; }
-        }
+        public Material FreeModeMaterial { get; private set; }
 
-        public Material NormalMaterial
-        {
-            get { return m_normalMaterial; }
-        }
+        public Material NormalMaterial { get; private set; }
 
-        private static SplineRuntimeEditor m_instance;
-        public static SplineRuntimeEditor Instance
-        {
-            get { return m_instance; }
-        }
+        public static SplineRuntimeEditor Instance { get; private set; }
 
         private void Awake()
         {
-            #if UNITY_EDITOR
-            UnityEditor.Selection.activeObject = null;
-            #endif
+#if UNITY_EDITOR
+            Selection.activeObject = null;
+#endif
 
             if (Camera == null)
             {
                 Camera = Camera.main;
-                if(Camera.main == null)
-                {
-                    Debug.LogError("Add Camera with MainCamera Tag");
-                }
+                if (Camera.main == null) Debug.LogError("Add Camera with MainCamera Tag");
             }
 
-            if (m_instance != null)
+            if (Instance != null) Debug.LogWarning("Another instance of SplineEditorSettings already exist");
+
+            if (MirroredModeMaterial == null)
             {
-                Debug.LogWarning("Another instance of SplineEditorSettings already exist");
+                var shader = Shader.Find("Battlehub/SplineEditor/SSBillboard");
+
+                MirroredModeMaterial = new Material(shader);
+                MirroredModeMaterial.name = "MirroredModeMaterial";
+                MirroredModeMaterial.color = MirroredModeColor;
+                MirroredModeMaterial.SetInt("_Cull", (int)CullMode.Off);
+                MirroredModeMaterial.SetInt("_ZWrite", 1);
+                MirroredModeMaterial.SetInt("_ZTest", (int)CompareFunction.Always);
             }
 
-            if (m_mirroredModeMaterial == null)
+            if (AlignedModeMaterial == null)
             {
-                Shader shader = Shader.Find("Battlehub/SplineEditor/SSBillboard");
-
-                m_mirroredModeMaterial = new Material(shader);
-                m_mirroredModeMaterial.name = "MirroredModeMaterial";
-                m_mirroredModeMaterial.color = MirroredModeColor;
-                m_mirroredModeMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
-                m_mirroredModeMaterial.SetInt("_ZWrite", 1);
-                m_mirroredModeMaterial.SetInt("_ZTest", (int)UnityEngine.Rendering.CompareFunction.Always);
+                AlignedModeMaterial = Instantiate(MirroredModeMaterial);
+                AlignedModeMaterial.name = "AlignedModeMaterial";
+                AlignedModeMaterial.color = AlignedModeColor;
             }
 
-            if (m_alignedModeMaterial == null)
+            if (FreeModeMaterial == null)
             {
-                m_alignedModeMaterial = Instantiate(m_mirroredModeMaterial);
-                m_alignedModeMaterial.name = "AlignedModeMaterial";
-                m_alignedModeMaterial.color = AlignedModeColor;
+                FreeModeMaterial = Instantiate(MirroredModeMaterial);
+                FreeModeMaterial.name = "FreeModeMaterial";
+                FreeModeMaterial.color = FreeModeColor;
             }
 
-            if (m_freeModeMaterial == null)
+            if (NormalMaterial == null)
             {
-                m_freeModeMaterial = Instantiate(m_mirroredModeMaterial);
-                m_freeModeMaterial.name = "FreeModeMaterial";
-                m_freeModeMaterial.color = FreeModeColor;
+                NormalMaterial = Instantiate(MirroredModeMaterial);
+                NormalMaterial.name = "SplineMaterial";
+                NormalMaterial.color = Color.green;
             }
 
-            if (m_normalMaterial == null)
+            if (ConnectedMaterial == null)
             {
-                m_normalMaterial = Instantiate(m_mirroredModeMaterial);
-                m_normalMaterial.name = "SplineMaterial";
-                m_normalMaterial.color = Color.green;
+                ConnectedMaterial = Instantiate(MirroredModeMaterial);
+                ConnectedMaterial.name = "BranchMaterial";
+                ConnectedMaterial.color = new Color32(0xa5, 0x00, 0xff, 0xff);
             }
 
-            if(m_connectedMaterial == null)
+            if (ControlPointMesh == null)
             {
-                m_connectedMaterial = Instantiate(m_mirroredModeMaterial);
-                m_connectedMaterial.name = "BranchMaterial";
-                m_connectedMaterial.color = new Color32(0xa5, 0x00, 0xff, 0xff);
-            }
-
-            if (m_controlPointMesh == null)
-            {
-                m_controlPointMesh = new Mesh();
-                m_controlPointMesh.name = "control point mesh";
-                m_controlPointMesh.vertices = new[]
+                ControlPointMesh = new Mesh();
+                ControlPointMesh.name = "control point mesh";
+                ControlPointMesh.vertices = new[]
                 {
                     new Vector3(0, 0, 0),
                     new Vector3(0, 0, 0),
                     new Vector3(0, 0, 0),
                     new Vector3(0, 0, 0)
                 };
-                m_controlPointMesh.triangles = new[]
+                ControlPointMesh.triangles = new[]
                 {
                     0, 1, 2, 0, 2, 3
                 };
-                m_controlPointMesh.uv = new[]
+                ControlPointMesh.uv = new[]
                 {
                     new Vector2(-1, -1),
                     new Vector2(1, -1),
                     new Vector2(1, 1),
                     new Vector2(-1, 1)
                 };
-                m_controlPointMesh.RecalculateBounds();
+                ControlPointMesh.RecalculateBounds();
             }
 
-            m_instance = this;
+            Instance = this;
             EnableRuntimeEditing();
 
             RuntimeSelection.SelectionChanged += OnRuntimeSelectionChanged;
@@ -159,10 +123,48 @@ namespace Battlehub.SplineEditor
 
         private void Start()
         {
-            if (Created != null)
+            if (Created != null) Created(this, EventArgs.Empty);
+        }
+
+        private void LateUpdate()
+        {
+            if (Instance == null)
             {
-                Created(this, EventArgs.Empty);
+                Instance = this;
+                var splines = FindObjectsOfType<SplineBase>();
+                for (var i = 0; i < splines.Length; ++i)
+                {
+                    var spline = splines[i];
+                    if (spline.IsSelected) spline.Select();
+                }
             }
+        }
+
+        private void OnDestroy()
+        {
+            if (!Application.isPlaying) DisableRuntimeEditing();
+
+            var enteringPlayMode = false;
+#if UNITY_EDITOR
+            enteringPlayMode = EditorApplication.isPlayingOrWillChangePlaymode && !EditorApplication.isPlaying;
+#endif
+
+
+            if (!m_isApplicationQuit && !enteringPlayMode)
+            {
+                var controlPoints = Resources.FindObjectsOfTypeAll<SplineControlPoint>();
+                for (var i = 0; i < controlPoints.Length; ++i)
+                {
+                    var controlPoint = controlPoints[i];
+                    if (controlPoint != null) controlPoint.DestroyRuntimeComponents();
+                }
+            }
+
+            if (Destroyed != null) Destroyed(this, EventArgs.Empty);
+
+            RuntimeSelection.SelectionChanged -= OnRuntimeSelectionChanged;
+
+            Instance = null;
         }
 
         private void OnApplicationQuit()
@@ -170,126 +172,59 @@ namespace Battlehub.SplineEditor
             m_isApplicationQuit = true;
         }
 
-        private void OnDestroy()
-        {
-            if (!Application.isPlaying)
-            {
-                DisableRuntimeEditing();
-            }
-
-            bool enteringPlayMode = false;
-            #if UNITY_EDITOR
-            enteringPlayMode = UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode && !UnityEditor.EditorApplication.isPlaying;
-            #endif
-
-
-            if (!m_isApplicationQuit && !enteringPlayMode)
-            {
-                SplineControlPoint[] controlPoints = Resources.FindObjectsOfTypeAll<SplineControlPoint>();
-                for (int i = 0; i < controlPoints.Length; ++i)
-                {
-                    SplineControlPoint controlPoint = controlPoints[i];
-                    if (controlPoint != null)
-                    {
-                        controlPoint.DestroyRuntimeComponents();
-                    }
-                }
-            }
-
-            if (Destroyed != null)
-            {
-                Destroyed(this, EventArgs.Empty);
-            }
-
-            RuntimeSelection.SelectionChanged -= OnRuntimeSelectionChanged;
-
-            m_instance = null;
-        }
+        public static event EventHandler Created;
+        public static event EventHandler Destroyed;
 
         private void DisableRuntimeEditing()
         {
             if (Camera != null)
             {
-                GLCamera glCamera = Camera.GetComponent<GLCamera>();
-                if(glCamera != null)
-                {
-                    DestroyImmediate(glCamera);
-                }
+                var glCamera = Camera.GetComponent<GLCamera>();
+                if (glCamera != null) DestroyImmediate(glCamera);
             }
         }
 
         private void EnableRuntimeEditing()
         {
-            if(Camera == null)
-            {
-                return;
-            }
-            if (!Camera.GetComponent<GLCamera>())
-            {
-                Camera.gameObject.AddComponent<GLCamera>();
-            }
+            if (Camera == null) return;
+            if (!Camera.GetComponent<GLCamera>()) Camera.gameObject.AddComponent<GLCamera>();
         }
 
-        private void LateUpdate()
-        {
-            if (m_instance == null)
-            {
-                m_instance = this;
-                SplineBase[] splines = FindObjectsOfType<SplineBase>();
-                for (int i = 0; i < splines.Length; ++i)
-                {
-                    SplineBase spline = splines[i];
-                    if (spline.IsSelected)
-                    {
-                        spline.Select();
-                    }
-                }
-            }
-        }
-
-        private void OnRuntimeSelectionChanged(UnityEngine.Object[] unselected)
+        private void OnRuntimeSelectionChanged(Object[] unselected)
         {
             SplineBase minSpline = null;
-            int minIndex = -1;
-            float minDistance = float.PositiveInfinity;
+            var minIndex = -1;
+            var minDistance = float.PositiveInfinity;
             if (unselected != null)
             {
-                GameObject[] gameObjects = unselected.OfType<GameObject>().ToArray();
+                var gameObjects = unselected.OfType<GameObject>().ToArray();
 
-                for (int i = 0; i < gameObjects.Length; ++i)
+                for (var i = 0; i < gameObjects.Length; ++i)
                 {
-                    GameObject go = gameObjects[i];
-                    if (go == null)
-                    {
-                        continue;
-                    }
+                    var go = gameObjects[i];
+                    if (go == null) continue;
 
-                    SplineBase spline = go.GetComponentInParent<SplineBase>();
-                    if (spline == null)
-                    {
-                        continue;
-                    }
+                    var spline = go.GetComponentInParent<SplineBase>();
+                    if (spline == null) continue;
 
                     spline.Select();
-                    float distance = minDistance;
+                    var distance = minDistance;
                     SplineBase hitSpline;
-                    int selectedIndex = HitTestRecursive(spline.Root, minDistance, out hitSpline, out distance);
+                    var selectedIndex = HitTestRecursive(spline.Root, minDistance, out hitSpline, out distance);
                     if (distance < minDistance && selectedIndex != -1)
                     {
                         minDistance = distance;
                         minIndex = selectedIndex;
                         minSpline = hitSpline;
                     }
+
                     spline.Unselect();
                 }
 
                 if (minSpline != null)
                 {
-                    SplineControlPoint ctrlPoint = minSpline.GetSplineControlPoints().Where(p => p.Index == minIndex).FirstOrDefault();
-                    if (ctrlPoint != null)
-                    {
-                        RuntimeSelection.activeObject = ctrlPoint.gameObject;
-                    }
+                    var ctrlPoint = minSpline.GetSplineControlPoints().Where(p => p.Index == minIndex).FirstOrDefault();
+                    if (ctrlPoint != null) RuntimeSelection.activeObject = ctrlPoint.gameObject;
                     minSpline.Select();
 
                     return;
@@ -298,30 +233,26 @@ namespace Battlehub.SplineEditor
 
             if (RuntimeSelection.gameObjects != null)
             {
-                GameObject[] gameObjects = RuntimeSelection.gameObjects;
+                var gameObjects = RuntimeSelection.gameObjects;
                 if (gameObjects != null)
-                {
-                    for (int i = 0; i < gameObjects.Length; ++i)
+                    for (var i = 0; i < gameObjects.Length; ++i)
                     {
-                        SplineBase spline = gameObjects[i].GetComponentInParent<SplineBase>();
-                        if(spline != null)
-                        {
-                            spline.Select();
-                        }
+                        var spline = gameObjects[i].GetComponentInParent<SplineBase>();
+                        if (spline != null) spline.Select();
                     }
-                }
             }
         }
 
-        private int HitTestRecursive(SplineBase spline, float distance, out SplineBase resultSpline, out float resultDistance)
+        private int HitTestRecursive(SplineBase spline, float distance, out SplineBase resultSpline,
+            out float resultDistance)
         {
             resultSpline = null;
             resultDistance = float.MaxValue;
-            int minIndex = -1;
+            var minIndex = -1;
 
             float minDistance;
-            int index = HitTest(spline, out minDistance);
-            if(index > -1 && minDistance < distance)
+            var index = HitTest(spline, out minDistance);
+            if (index > -1 && minDistance < distance)
             {
                 resultSpline = spline;
                 resultDistance = minDistance;
@@ -329,15 +260,14 @@ namespace Battlehub.SplineEditor
                 minIndex = index;
             }
 
-            if(spline.Children != null)
-            {
-                for (int i = 0; i < spline.Children.Length; ++i)
+            if (spline.Children != null)
+                for (var i = 0; i < spline.Children.Length; ++i)
                 {
-                    SplineBase child = spline.Children[i];
+                    var child = spline.Children[i];
                     SplineBase childResult;
                     float childDistance;
-                    int childIndex = HitTestRecursive(child, distance, out childResult, out childDistance);
-                    if(childIndex > -1)
+                    var childIndex = HitTestRecursive(child, distance, out childResult, out childDistance);
+                    if (childIndex > -1)
                     {
                         resultSpline = childResult;
                         resultDistance = childDistance;
@@ -346,7 +276,6 @@ namespace Battlehub.SplineEditor
                         minIndex = childIndex;
                     }
                 }
-            }
 
             return minIndex;
         }
@@ -360,29 +289,20 @@ namespace Battlehub.SplineEditor
                 return -1;
             }
 
-            if(RuntimeSelection.gameObjects == null)
-            {
-                return -1;
-            }
+            if (RuntimeSelection.gameObjects == null) return -1;
 
-            Vector3[] controlPoints = new Vector3[spline.ControlPointCount];
-            for (int j = 0; j < controlPoints.Length; j++)
-            {
-                controlPoints[j] = spline.GetControlPoint(j);
-            }
+            var controlPoints = new Vector3[spline.ControlPointCount];
+            for (var j = 0; j < controlPoints.Length; j++) controlPoints[j] = spline.GetControlPoint(j);
 
             minDistance = SelectionMargin * SelectionMargin;
-            int selectedIndex = -1;
+            var selectedIndex = -1;
             Vector2 mousePositon = Input.mousePosition;
-            for (int i = 0; i < controlPoints.Length; ++i)
+            for (var i = 0; i < controlPoints.Length; ++i)
             {
-                Vector3 ctrlPoint = controlPoints[i];
-                if(spline.IsControlPointLocked(i))
-                {
-                    continue;
-                }
+                var ctrlPoint = controlPoints[i];
+                if (spline.IsControlPointLocked(i)) continue;
                 Vector2 pt = Camera.WorldToScreenPoint(ctrlPoint);
-                float mag = (pt - mousePositon).sqrMagnitude;
+                var mag = (pt - mousePositon).sqrMagnitude;
                 if (mag < minDistance)
                 {
                     minDistance = mag;
@@ -395,25 +315,16 @@ namespace Battlehub.SplineEditor
 
         public void OnClosed()
         {
-            if(RuntimeSelection.gameObjects == null)
-            {
-                return;
-            }
+            if (RuntimeSelection.gameObjects == null) return;
 
-            GameObject[] gameObjects = RuntimeSelection.gameObjects.OfType<GameObject>().ToArray();
-            for (int i = 0; i < gameObjects.Length; ++i)
+            var gameObjects = RuntimeSelection.gameObjects.OfType<GameObject>().ToArray();
+            for (var i = 0; i < gameObjects.Length; ++i)
             {
-                GameObject go = gameObjects[i];
-                if (go == null)
-                {
-                    continue;
-                }
+                var go = gameObjects[i];
+                if (go == null) continue;
 
-                SplineBase spline = go.GetComponentInParent<SplineBase>();
-                if (spline == null)
-                {
-                    continue;
-                }
+                var spline = go.GetComponentInParent<SplineBase>();
+                if (spline == null) continue;
 
                 spline.Unselect();
             }
@@ -421,7 +332,6 @@ namespace Battlehub.SplineEditor
 
         public void OnOpened()
         {
-
         }
     }
 }

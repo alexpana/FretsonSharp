@@ -8,9 +8,9 @@ using UnityEngine.Rendering.HighDefinition;
 
 // Shapes © Freya Holmér - https://twitter.com/FreyaHolmer/
 // Website & Documentation - https://acegikmo.com/shapes/
-namespace Shapes {
-
-	#if SHAPES_HDRP
+namespace Shapes
+{
+#if SHAPES_HDRP
 	[ExecuteAlways]
 	public class HDRPCustomPassManager : MonoBehaviour {
 
@@ -33,7 +33,8 @@ namespace Shapes {
 		void OnEnable() => instance = this;
 		void Awake() => instance = this;
 
-		Dictionary<CustomPassInjectionPoint, CustomPassVolume> volumes = new Dictionary<CustomPassInjectionPoint, CustomPassVolume>();
+		Dictionary<CustomPassInjectionPoint, CustomPassVolume> volumes =
+ new Dictionary<CustomPassInjectionPoint, CustomPassVolume>();
 
 		public void MakeSureVolumeExistsForInjectionPoint( CustomPassInjectionPoint injPt ) {
 			if( volumes.ContainsKey( injPt ) )
@@ -64,6 +65,5 @@ namespace Shapes {
 		}
 
 	}
-	#endif
-
+#endif
 }

@@ -3,27 +3,27 @@ using UnityEditor;
 
 // Shapes © Freya Holmér - https://twitter.com/FreyaHolmer/
 // Website & Documentation - https://acegikmo.com/shapes/
-namespace Shapes {
+namespace Shapes
+{
+    [CustomEditor(typeof(Cone))]
+    [CanEditMultipleObjects]
+    public class ConeEditor : ShapeRendererEditor
+    {
+        private readonly SerializedProperty propFillCap = null;
+        private readonly SerializedProperty propLength = null;
 
-	[CustomEditor( typeof(Cone) )]
-	[CanEditMultipleObjects]
-	public class ConeEditor : ShapeRendererEditor {
+        private readonly SerializedProperty propRadius = null;
+        private readonly SerializedProperty propSizeSpace = null;
 
-		SerializedProperty propRadius = null;
-		SerializedProperty propLength = null;
-		SerializedProperty propSizeSpace = null;
-		SerializedProperty propFillCap = null;
-
-		public override void OnInspectorGUI() {
-			base.BeginProperties();
-			ShapesUI.FloatInSpaceField( propRadius, propSizeSpace );
-			ShapesUI.FloatInSpaceField( propLength, propSizeSpace, spaceEnabled: false );
-			EditorGUILayout.PropertyField( propFillCap );
-			if( base.EndProperties() )
-				foreach( Cone cone in targets.Cast<Cone>() )
-					cone.UpdateMesh();
-		}
-
-	}
-
+        public override void OnInspectorGUI()
+        {
+            BeginProperties();
+            ShapesUI.FloatInSpaceField(propRadius, propSizeSpace);
+            ShapesUI.FloatInSpaceField(propLength, propSizeSpace, false);
+            EditorGUILayout.PropertyField(propFillCap);
+            if (EndProperties())
+                foreach (var cone in targets.Cast<Cone>())
+                    cone.UpdateMesh();
+        }
+    }
 }

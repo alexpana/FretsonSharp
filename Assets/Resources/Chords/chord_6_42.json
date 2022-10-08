@@ -1,1 +1,58 @@
-{"results":[{"id":1559,"key":"1559","strings":[[{"fretNo":10,"barre":1,"symbol":"4"}],[{"fretNo":10,"barre":true,"symbol":"4"}],[{"fretNo":9,"symbol":"3"}],[{"fretNo":8,"symbol":"1"}],[{"fretNo":9,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":7,"variation":1,"realVariation":99,"rootNoteId":6,"typeId":42,"isVariation":true,"shape":"3-3-2-1-2"}],"message":null}
+{
+  "results": [
+    {
+      "id": 1559,
+      "key": "1559",
+      "strings": [
+        [
+          {
+            "fretNo": 10,
+            "barre": 1,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "barre": true,
+            "symbol": "4"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 8,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 9,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 7,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 6,
+      "typeId": 42,
+      "isVariation": true,
+      "shape": "3-3-2-1-2"
+    }
+  ],
+  "message": null
+}

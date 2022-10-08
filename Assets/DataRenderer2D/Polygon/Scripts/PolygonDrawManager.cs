@@ -1,16 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace geniikw.DataRenderer2D.Polygon
 {
-    public class PolygonDrawerManager 
+    public class PolygonDrawerManager
     {
-        IPolygon _target;
-        IMeshDrawer _normal;
-        IMeshDrawer _hole;
+        private readonly IMeshDrawer _hole;
+        private readonly IMeshDrawer _normal;
+        private readonly IPolygon _target;
 
-        public PolygonDrawerManager(IPolygon target ,
+        public PolygonDrawerManager(IPolygon target,
             IMeshDrawer normal, IMeshDrawer hole)
         {
             _target = target;
@@ -34,9 +32,6 @@ namespace geniikw.DataRenderer2D.Polygon
             else if (polyGon.type >= PolygonType.Hole)
                 foreach (var m in _hole.Draw())
                     yield return m;
-
-            yield break;
         }
-        
     }
 }

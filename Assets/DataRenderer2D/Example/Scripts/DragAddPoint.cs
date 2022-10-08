@@ -1,19 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace geniikw.DataRenderer2D.Example
 {
-    public class DragAddPoint : MonoBehaviour, IDragHandler,IPointerDownHandler
+    public class DragAddPoint : MonoBehaviour, IDragHandler, IPointerDownHandler
     {
-
         public bool modeToggle = false;
 
         public float addDistance = 3f;
 
-        UILine m_line;
-        Vector3 m_prevPos;
+        private UILine m_line;
+        private Vector3 m_prevPos;
 
         private void Start()
         {
@@ -27,7 +24,7 @@ namespace geniikw.DataRenderer2D.Example
                 m_line.line.Push();
                 m_prevPos = eventData.position;
             }
-            
+
             m_line.line.EditPoint(eventData.position);
         }
 

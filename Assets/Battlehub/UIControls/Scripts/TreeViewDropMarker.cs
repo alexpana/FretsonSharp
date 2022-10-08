@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
+
 namespace Battlehub.UIControls
 {
     [RequireComponent(typeof(RectTransform))]
     public class TreeViewDropMarker : ItemDropMarker
     {
-        private TreeView m_treeView;
-        private RectTransform m_siblingGraphicsRectTransform;
         public GameObject ChildGraphics;
+        private RectTransform m_siblingGraphicsRectTransform;
+        private TreeView m_treeView;
+
         public override ItemDropAction Action
         {
-            get { return base.Action; }
+            get => base.Action;
             set
             {
                 base.Action = value;
@@ -28,40 +30,28 @@ namespace Battlehub.UIControls
         public override void SetTraget(ItemContainer item)
         {
             base.SetTraget(item);
-            if(item == null)
-            {
-                return;
-            }
+            if (item == null) return;
 
-            TreeViewItem tvItem = (TreeViewItem)item;
-            if(tvItem != null)
-            {
-                m_siblingGraphicsRectTransform.offsetMin = new Vector2(tvItem.Indent, m_siblingGraphicsRectTransform.offsetMin.y);
-            }
+            var tvItem = (TreeViewItem)item;
+            if (tvItem != null)
+                m_siblingGraphicsRectTransform.offsetMin =
+                    new Vector2(tvItem.Indent, m_siblingGraphicsRectTransform.offsetMin.y);
             else
-            {
                 m_siblingGraphicsRectTransform.offsetMin = new Vector2(0, m_siblingGraphicsRectTransform.offsetMin.y);
-            }
         }
 
         public override void SetPosition(Vector2 position)
         {
-            if(Item == null)
-            {
-                return;
-            }
+            if (Item == null) return;
 
-            RectTransform rt = Item.RectTransform;
-            TreeViewItem tvItem = (TreeViewItem)Item;
+            var rt = Item.RectTransform;
+            var tvItem = (TreeViewItem)Item;
             Vector2 localPoint;
 
             Camera camera = null;
-            if(ParentCanvas.renderMode == RenderMode.WorldSpace)
-            {
-                camera = m_treeView.Camera;
-            }
+            if (ParentCanvas.renderMode == RenderMode.WorldSpace) camera = m_treeView.Camera;
 
-            if(RectTransformUtility.ScreenPointToLocalPointInRectangle(rt, position, camera, out localPoint))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rt, position, camera, out localPoint))
             {
                 if (localPoint.y > -rt.rect.height / 4)
                 {
@@ -79,10 +69,6 @@ namespace Battlehub.UIControls
                     RectTransform.position = rt.position;
                 }
             }
-
-           
         }
-       
     }
 }
-

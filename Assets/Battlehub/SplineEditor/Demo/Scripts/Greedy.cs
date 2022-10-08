@@ -6,21 +6,18 @@ namespace Battlehub.SplineEditor
     {
         public void OnFork(ForkEventArgs args)
         {
-            float min = float.MaxValue;
-            int minIndex = -1;
-            if (args.NextCurveIndex != -1)
-            {
-                min = args.Spline.EvalCurveLength(args.NextCurveIndex);
-            }
+            var min = float.MaxValue;
+            var minIndex = -1;
+            if (args.NextCurveIndex != -1) min = args.Spline.EvalCurveLength(args.NextCurveIndex);
 
-            for(int i = 0; i < args.Branches.Length; ++i)
+            for (var i = 0; i < args.Branches.Length; ++i)
             {
-                SplineBase branch = args.Branches[i];
-                float len = branch.EvalCurveLength(0);
-                if(len < min)
+                var branch = args.Branches[i];
+                var len = branch.EvalCurveLength(0);
+                if (len < min)
                 {
                     min = len;
-                    minIndex = i; 
+                    minIndex = i;
                 }
             }
 
@@ -28,4 +25,3 @@ namespace Battlehub.SplineEditor
         }
     }
 }
-

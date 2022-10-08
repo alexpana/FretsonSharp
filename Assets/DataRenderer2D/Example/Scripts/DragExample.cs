@@ -1,14 +1,9 @@
-﻿using geniikw.DataRenderer2D;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace geniikw.DataRenderer2D.Example
 {
-
     public class DragExample : MonoBehaviour
     {
-
         public UILine line;
         public Gradient grad;
         public Gradient red;
@@ -17,7 +12,6 @@ namespace geniikw.DataRenderer2D.Example
         public void Clear()
         {
             line.line.Clear();
-
         }
 
         public void ColorToggle()
@@ -30,6 +24,5 @@ namespace geniikw.DataRenderer2D.Example
 
             line.GeometyUpdateFlagUp();
         }
-
     }
 }

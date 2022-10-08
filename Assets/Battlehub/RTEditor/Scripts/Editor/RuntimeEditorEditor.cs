@@ -9,7 +9,7 @@ namespace Battlehub.RTEditor
         {
             base.OnInspectorGUI();
 
-            RuntimeEditor rtEditor = (RuntimeEditor)target;
+            var rtEditor = (RuntimeEditor)target;
 
             EditorGUI.BeginChangeCheck();
             //bool isOn = EditorGUILayout.Toggle("IsOn", rtEditor.IsOn);
@@ -21,15 +21,13 @@ namespace Battlehub.RTEditor
             //}
 
             EditorGUI.BeginChangeCheck();
-            int layer = EditorGUILayout.LayerField("RaycastLayer", rtEditor.RaycastLayer);
-            if(EditorGUI.EndChangeCheck())
+            var layer = EditorGUILayout.LayerField("RaycastLayer", rtEditor.RaycastLayer);
+            if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(rtEditor, "Battlehub.RTEditor.RaycastLayer");
                 EditorUtility.SetDirty(rtEditor);
                 rtEditor.RaycastLayer = layer;
             }
         }
-
     }
 }
-

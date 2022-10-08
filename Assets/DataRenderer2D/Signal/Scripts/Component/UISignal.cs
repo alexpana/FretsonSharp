@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,8 +9,13 @@ namespace geniikw.DataRenderer2D.Signal
     [RequireComponent(typeof(RectTransform))]
     public class UISignal : UIDataMesh, IUnitSize, ISignalData
     {
-        RectTransform m_rect = null;
-        RectTransform Rect
+        public SignalData signal;
+        public float Speed = 1f;
+
+        private SignalBuilder m_meshBuilder = null;
+        private RectTransform m_rect = null;
+
+        private RectTransform Rect
         {
             get
             {
@@ -22,46 +26,24 @@ namespace geniikw.DataRenderer2D.Signal
             }
         }
 
-        public SignalData signal;
-        public float Speed = 1f;
-
-        SignalBuilder m_meshBuilder = null;
-
-        public void Update()
-        {
-            if(Application.isPlaying)
-                signal.t += Time.deltaTime * Speed;
-            UpdateGeometry();
-        }
+        protected override IEnumerable<IMesh> DrawerFactory =>
+            (m_meshBuilder ?? (m_meshBuilder = new SignalBuilder(this, this))).Draw();
 
         protected new void Reset()
         {
             signal = SignalData.Default;
         }
 
-        protected override IEnumerable<IMesh> DrawerFactory
+        public void Update()
         {
-            get
-            {
-                return (m_meshBuilder ?? (m_meshBuilder =new SignalBuilder(this, this))).Draw();
-            }
+            if (Application.isPlaying)
+                signal.t += Time.deltaTime * Speed;
+            UpdateGeometry();
         }
 
-        public Vector2 Size
-        {
-            get
-            {
-                return Rect.rect.size;
-            }
-        }
+        public SignalData Signal => signal;
 
-        public SignalData Signal
-        {
-            get
-            {
-                return signal;
-            }
-        }
+        public Vector2 Size => Rect.rect.size;
 
         //example.
         public void AmpHandler(float amf)
@@ -74,7 +56,7 @@ namespace geniikw.DataRenderer2D.Signal
         {
             signal.up.use = t;
         }
-        
+
         public void DownUseHandler(bool t)
         {
             signal.down.use = t;
@@ -82,9 +64,8 @@ namespace geniikw.DataRenderer2D.Signal
 
         public void UpFrequencyHandler(float v)
         {
-            signal.up.frequncy = v*20;
+            signal.up.frequncy = v * 20;
         }
-
     }
 
 
@@ -92,10 +73,6 @@ namespace geniikw.DataRenderer2D.Signal
     [CustomEditor(typeof(UISignal))]
     public class UISinEditor : Editor
     {
-
     }
 #endif
-
-
-
 }

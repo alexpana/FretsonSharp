@@ -1,1 +1,114 @@
-{"results":[{"id":684,"key":"684","strings":[[{"fretNo":5,"barre":3,"symbol":"1"}],[{"fretNo":6,"symbol":"3"}],[{"fretNo":5,"barre":true,"symbol":"1"}],[{"fretNo":5,"barre":true,"symbol":"1"}],[{"fretNo":6,"isRootNote":true,"symbol":"2"}],[{"fretNo":0,"isMuted":true,"symbol":"X"}]],"firstFret":3,"variation":1,"realVariation":99,"rootNoteId":3,"typeId":16,"isVariation":true,"shape":"1-2-1-1-2"},{"id":683,"key":"683","strings":[[{"fretNo":10,"barre":4,"symbol":"1"}],[{"fretNo":10,"barre":true,"symbol":"1"}],[{"fretNo":10,"barre":true,"symbol":"1"}],[{"fretNo":10,"barre":true,"symbol":"1"}],[{"fretNo":10,"barre":true,"symbol":"1"}],[{"fretNo":11,"isRootNote":true,"symbol":"2"}]],"firstFret":8,"variation":2,"realVariation":99,"rootNoteId":3,"typeId":16,"isVariation":true,"shape":"1-1-1-1-1-2"}],"message":null}
+{
+  "results": [
+    {
+      "id": 684,
+      "key": "684",
+      "strings": [
+        [
+          {
+            "fretNo": 5,
+            "barre": 3,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "symbol": "3"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 5,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 6,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ],
+        [
+          {
+            "fretNo": 0,
+            "isMuted": true,
+            "symbol": "X"
+          }
+        ]
+      ],
+      "firstFret": 3,
+      "variation": 1,
+      "realVariation": 99,
+      "rootNoteId": 3,
+      "typeId": 16,
+      "isVariation": true,
+      "shape": "1-2-1-1-2"
+    },
+    {
+      "id": 683,
+      "key": "683",
+      "strings": [
+        [
+          {
+            "fretNo": 10,
+            "barre": 4,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 10,
+            "barre": true,
+            "symbol": "1"
+          }
+        ],
+        [
+          {
+            "fretNo": 11,
+            "isRootNote": true,
+            "symbol": "2"
+          }
+        ]
+      ],
+      "firstFret": 8,
+      "variation": 2,
+      "realVariation": 99,
+      "rootNoteId": 3,
+      "typeId": 16,
+      "isVariation": true,
+      "shape": "1-1-1-1-1-2"
+    }
+  ],
+  "message": null
+}

@@ -4,10 +4,11 @@ using UnityEngine;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public class DropdownAttribute : PropertyAttribute
 {
-    public enum MethodLocation { PropertyClass, StaticClass }
-    public MethodLocation Location { get; private set; }
-    public string MethodName { get; private set; }
-    public Type MethodOwnerType { get; private set; }
+    public enum MethodLocation
+    {
+        PropertyClass,
+        StaticClass
+    }
 
     public DropdownAttribute(string methodName)
     {
@@ -21,4 +22,8 @@ public class DropdownAttribute : PropertyAttribute
         MethodOwnerType = methodOwner;
         MethodName = methodName;
     }
+
+    public MethodLocation Location { get; }
+    public string MethodName { get; }
+    public Type MethodOwnerType { get; }
 }

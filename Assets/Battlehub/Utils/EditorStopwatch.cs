@@ -1,6 +1,7 @@
 ﻿#define ENABLE_STOPWATCH
 
-using UnityEngine;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 namespace Battlehub.Utils
 {
@@ -8,14 +9,14 @@ namespace Battlehub.Utils
     {
         public static EditorStopwatch Main;
 
+#if UNITY_EDITOR && ENABLE_STOPWATCH
+        private readonly Stopwatch m_stopwatch = new();
+#endif
+
         static EditorStopwatch()
         {
             Main = new EditorStopwatch();
         }
-
-#if UNITY_EDITOR && ENABLE_STOPWATCH
-        private System.Diagnostics.Stopwatch m_stopwatch = new System.Diagnostics.Stopwatch();
-#endif
 
         public void Start()
         {
@@ -30,10 +31,8 @@ namespace Battlehub.Utils
 #if UNITY_EDITOR && ENABLE_STOPWATCH
             m_stopwatch.Stop();
             Debug.Log(m_stopwatch.ElapsedMilliseconds + " ms " + output);
-            
+
 #endif
         }
-
     }
 }
-

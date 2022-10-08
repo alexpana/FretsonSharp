@@ -5,30 +5,20 @@ namespace Battlehub.RTHandles
     public class ScaleHandle : BaseHandle
     {
         public float GridSize = 0.1f;
-        private Vector3 m_prevPoint;
-        private Matrix4x4 m_matrix;
         private Matrix4x4 m_inverse;
+        private Matrix4x4 m_matrix;
+        private Vector3 m_prevPoint;
+        private Vector3[] m_refScales;
 
         private Vector3 m_roundedScale;
         private Vector3 m_scale;
-        private Vector3[] m_refScales;
-        private float m_screenScale;    
+        private float m_screenScale;
 
-        public static ScaleHandle Current
-        {
-            get;
-            private set;
-        }
+        public static ScaleHandle Current { get; private set; }
 
-        protected override RuntimeTool Tool
-        {
-            get { return RuntimeTool.Scale; }
-        }
+        protected override RuntimeTool Tool => RuntimeTool.Scale;
 
-        protected override float CurrentGridSize
-        {
-            get { return GridSize; }
-        }
+        protected override float CurrentGridSize => GridSize;
 
         protected override void StartOverride()
         {
@@ -39,10 +29,7 @@ namespace Battlehub.RTHandles
 
         protected override void OnDestroyOverride()
         {
-            if (Current == this)
-            {
-                Current = null;
-            }
+            if (Current == this) Current = null;
         }
 
         protected override bool OnBeginDrag()
@@ -51,9 +38,10 @@ namespace Battlehub.RTHandles
             m_matrix = Matrix4x4.TRS(transform.position, Rotation, Vector3.one);
             m_inverse = m_matrix.inverse;
 
-            Matrix4x4 matrix = Matrix4x4.TRS(transform.position, Rotation, new Vector3(m_screenScale, m_screenScale, m_screenScale));
+            var matrix = Matrix4x4.TRS(transform.position, Rotation,
+                new Vector3(m_screenScale, m_screenScale, m_screenScale));
 
-            if(HitCenter())
+            if (HitCenter())
             {
                 SelectedAxis = RuntimeHandleAxis.Free;
                 DragPlane = GetDragPlane();
@@ -63,24 +51,18 @@ namespace Battlehub.RTHandles
                 float distToYAxis;
                 float distToZAxis;
                 float distToXAxis;
-                bool hit = HitAxis(Vector3.up, matrix, out distToYAxis);
+                var hit = HitAxis(Vector3.up, matrix, out distToYAxis);
                 hit |= HitAxis(Vector3.forward, matrix, out distToZAxis);
                 hit |= HitAxis(Vector3.right, matrix, out distToXAxis);
 
                 if (hit)
                 {
                     if (distToYAxis <= distToZAxis && distToYAxis <= distToXAxis)
-                    {
                         SelectedAxis = RuntimeHandleAxis.Y;
-                    }
                     else if (distToXAxis <= distToYAxis && distToXAxis <= distToZAxis)
-                    {
                         SelectedAxis = RuntimeHandleAxis.X;
-                    }
                     else
-                    {
                         SelectedAxis = RuntimeHandleAxis.Z;
-                    }
                 }
                 else
                 {
@@ -90,13 +72,16 @@ namespace Battlehub.RTHandles
             }
 
             m_refScales = new Vector3[Targets.Length];
-            for(int i = 0; i < m_refScales.Length; ++i)
+            for (var i = 0; i < m_refScales.Length; ++i)
             {
-                Quaternion rotation = RuntimeTools.PivotRotation == RuntimePivotRotation.Global ? Targets[i].rotation : Quaternion.identity;
+                var rotation = RuntimeTools.PivotRotation == RuntimePivotRotation.Global
+                    ? Targets[i].rotation
+                    : Quaternion.identity;
                 m_refScales[i] = rotation * Target.localScale;
             }
+
             DragPlane = GetDragPlane();
-            bool result = GetPointOnDragPlane(Input.mousePosition, out m_prevPoint);
+            var result = GetPointOnDragPlane(Input.mousePosition, out m_prevPoint);
             return result;
         }
 
@@ -105,8 +90,8 @@ namespace Battlehub.RTHandles
             Vector3 point;
             if (GetPointOnDragPlane(Input.mousePosition, out point))
             {
-                Vector3 offset = m_inverse.MultiplyVector((point - m_prevPoint) / m_screenScale);
-                float mag = offset.magnitude;
+                var offset = m_inverse.MultiplyVector((point - m_prevPoint) / m_screenScale);
+                var mag = offset.magnitude;
                 if (SelectedAxis == RuntimeHandleAxis.X)
                 {
                     offset.y = offset.z = 0.0f;
@@ -117,14 +102,15 @@ namespace Battlehub.RTHandles
                     offset.x = offset.z = 0.0f;
                     m_scale.y += Mathf.Sign(offset.y) * mag;
                 }
-                else if(SelectedAxis == RuntimeHandleAxis.Z)
+                else if (SelectedAxis == RuntimeHandleAxis.Z)
                 {
                     offset.x = offset.y = 0.0f;
                     m_scale.z += Mathf.Sign(offset.z) * mag;
                 }
-                if(SelectedAxis == RuntimeHandleAxis.Free)
+
+                if (SelectedAxis == RuntimeHandleAxis.Free)
                 {
-                    float sign = Mathf.Sign(offset.x + offset.y);
+                    var sign = Mathf.Sign(offset.x + offset.y);
                     m_scale.x += sign * mag;
                     m_scale.y += sign * mag;
                     m_scale.z += sign * mag;
@@ -132,20 +118,23 @@ namespace Battlehub.RTHandles
 
                 m_roundedScale = m_scale;
 
-                if(EffectiveGridSize > 0.01)
+                if (EffectiveGridSize > 0.01)
                 {
                     m_roundedScale.x = Mathf.RoundToInt(m_roundedScale.x / EffectiveGridSize) * EffectiveGridSize;
                     m_roundedScale.y = Mathf.RoundToInt(m_roundedScale.y / EffectiveGridSize) * EffectiveGridSize;
                     m_roundedScale.z = Mathf.RoundToInt(m_roundedScale.z / EffectiveGridSize) * EffectiveGridSize;
                 }
 
-                for (int i = 0; i < m_refScales.Length; ++i)
+                for (var i = 0; i < m_refScales.Length; ++i)
                 {
-                    Quaternion rotation =  RuntimeTools.PivotRotation == RuntimePivotRotation.Global ? Targets[i].rotation : Quaternion.identity;
-                    
-                    Targets[i].localScale = Quaternion.Inverse(rotation) * Vector3.Scale(m_refScales[i], m_roundedScale);
+                    var rotation = RuntimeTools.PivotRotation == RuntimePivotRotation.Global
+                        ? Targets[i].rotation
+                        : Quaternion.identity;
+
+                    Targets[i].localScale =
+                        Quaternion.Inverse(rotation) * Vector3.Scale(m_refScales[i], m_roundedScale);
                 }
-                
+
                 m_prevPoint = point;
             }
         }
@@ -158,7 +147,7 @@ namespace Battlehub.RTHandles
 
         protected override void DrawOverride()
         {
-            RuntimeHandles.DoScaleHandle(m_roundedScale, transform.position, Rotation,  SelectedAxis);
+            RuntimeHandles.DoScaleHandle(m_roundedScale, transform.position, Rotation, SelectedAxis);
         }
     }
 }
