@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core;
 using Core.Input;
@@ -51,6 +52,17 @@ public class ConnectionManager : MonoBehaviour
         {
             Vector3 destination = _hoveredSlot != null ? _hoveredSlot.transform.position : Input.mousePosition;
             UpdateBezier(_linkShadow, _sourceSlot.transform.position, destination);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        foreach (SlotConnection slotConnection in _connections)
+        {
+            if (slotConnection.Source.PositionDirty || slotConnection.Destination.PositionDirty)
+            {
+                UpdateBezier(_connectionToBezier[slotConnection], slotConnection.Source, slotConnection.Destination);
+            }
         }
     }
 
@@ -155,8 +167,8 @@ public class ConnectionManager : MonoBehaviour
         {
             NodeSlot.Orientation.Left => new Vector3(-1, 0, 0),
             NodeSlot.Orientation.Right => new Vector3(1, 0, 0),
-            NodeSlot.Orientation.Down => new Vector3(0, 1, 0),
-            NodeSlot.Orientation.Up => new Vector3(0, -1, 0),
+            NodeSlot.Orientation.Down => new Vector3(0, -1, 0),
+            NodeSlot.Orientation.Up => new Vector3(0, 1, 0),
             _ => Vector3.zero
         };
     }

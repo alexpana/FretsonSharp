@@ -1,8 +1,10 @@
 using Fretson.Core;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class NodeSlot : MonoBehaviour
+public class NodeSlot : MonoBehaviour, IDragHandler
 {
     public enum Direction
     {
@@ -28,7 +30,23 @@ public class NodeSlot : MonoBehaviour
 
     public Orientation SlotOrientation;
 
-    public void Update()
+    public string Label;
+
+    private TMP_Text _labelText;
+
+    public bool PositionDirty = false;
+
+    private void Start()
+    {
+        _labelText = GetComponentInChildren<TMP_Text>();
+
+        if (_labelText != null)
+        {
+            _labelText.text = Label;
+        }
+    }
+
+    public void OnDrag(PointerEventData eventData)
     {
     }
 }
